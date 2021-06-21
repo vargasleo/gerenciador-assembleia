@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.internal.bytebuddy.utility.RandomString;
 
 import static org.mockito.Mockito.*;
 
@@ -31,13 +32,14 @@ public class CreateAgendaServiceTest {
     @Mock
     private ModelMapper modelMapper;
 
+    private final String userId = "mockUserId";
+    private final String mockSubject = "mockSubject";
+
     @Test
-    public void ShouldCreateAgendaWhenValidUser() {
-        String userId = "mockUserId";
-        String subject = "mockSubject";
-        CreateAgendaRequest request = new CreateAgendaRequest(userId, subject);
-        Agenda agenda = new Agenda(subject, AgendaStatus.open);
-        CreateAgendaResponse response = new CreateAgendaResponse(subject, AgendaStatus.open);
+    public void shouldCreateAgendaWhenValidUser() {
+        CreateAgendaRequest request = new CreateAgendaRequest(userId, mockSubject);
+        Agenda agenda = new Agenda(mockSubject, AgendaStatus.open);
+        CreateAgendaResponse response = new CreateAgendaResponse(mockSubject, AgendaStatus.created, RandomString.make());
 
         when(agendaRepository.save(any(Agenda.class))).thenReturn(agenda);
         when(modelMapper.map(agenda, CreateAgendaResponse.class)).thenReturn(response);
@@ -50,10 +52,8 @@ public class CreateAgendaServiceTest {
     }
 
     @Test(expected = BusinessException.class)
-    public void ShouldNotCreateAgendaWhenInvalidUser() {
-        String userId = "mockUserId";
-        String subject = "mockSubject";
-        CreateAgendaRequest request = new CreateAgendaRequest(userId, subject);
+    public void shouldNotCreateAgendaWhenInvalidUser() {
+        CreateAgendaRequest request = new CreateAgendaRequest(userId, mockSubject);
 
         doThrow(new BusinessException(userValidator.INVALID_USER)).when(userValidator).validateUserId(userId);
 

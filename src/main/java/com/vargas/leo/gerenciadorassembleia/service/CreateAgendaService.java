@@ -20,7 +20,7 @@ public class CreateAgendaService {
 
     public CreateAgendaResponse create(CreateAgendaRequest createAgendaRequest) {
         userValidator.validateUserId(createAgendaRequest.getUserId());
-        Agenda agenda = new Agenda(createAgendaRequest.getSubject(), AgendaStatus.open);
+        Agenda agenda = new Agenda(createAgendaRequest.getSubject(), AgendaStatus.created);
         return mapper.map(agendaRepository.save(agenda), CreateAgendaResponse.class);
     }
 }

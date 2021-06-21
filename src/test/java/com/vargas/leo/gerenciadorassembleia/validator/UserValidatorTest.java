@@ -15,13 +15,13 @@ public class UserValidatorTest {
     private UserValidator userValidator;
 
     @Test
-    public void ShouldDoNothingWhenValidUserId() {
+    public void shouldDoNothingWhenValidUserId() {
         String userId = "mockUserId";
         userValidator.validateUserId(userId);
     }
 
     @Test(expected = BusinessException.class)
-    public void ShouldThrowExceptionWhenInvalidUserId() {
+    public void shouldThrowExceptionWhenInvalidUserId() {
         String expectedMessage = userValidator.INVALID_USER;
         try {
             userValidator.validateUserId(null);
