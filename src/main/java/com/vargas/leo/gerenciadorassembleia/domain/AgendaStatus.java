@@ -2,6 +2,7 @@ package com.vargas.leo.gerenciadorassembleia.domain;
 
 public enum AgendaStatus {
 
+    created("created agenda"),
     open("opened agenda"),
     closed("closed agenda");
 
