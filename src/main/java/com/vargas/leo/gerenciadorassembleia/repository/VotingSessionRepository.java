@@ -15,4 +15,13 @@ public class VotingSessionRepository {
         votingSessionRepository.add(votingSession);
         return votingSession;
     }
+
+    public VotingSession findById(String votingSessionId) {
+        for (VotingSession v : votingSessionRepository) {
+            if(v.getId().equals(votingSessionId)) {
+                return v;
+            }
+        }
+        return null;
+    }
 }

@@ -112,7 +112,7 @@ public class CreatingVotingSessionServiceTest {
         verify(agendaRepository).findById(agendaId);
         verify(agendaRepository).save(agenda);
         verify(votingSessionValidator).validateFinalDateTime(null);
-        verify(votingSessionRepository, never()).save(result);
+        verify(votingSessionRepository).save(result);
     }
 
     @Test
@@ -134,6 +134,6 @@ public class CreatingVotingSessionServiceTest {
         verify(agendaRepository).findById(agendaId);
         verify(agendaRepository).save(agenda);
         verify(votingSessionValidator).validateFinalDateTime(invalidFinalDateTime);
-        verify(votingSessionRepository, never()).save(result);
+        verify(votingSessionRepository).save(result);
     }
 }

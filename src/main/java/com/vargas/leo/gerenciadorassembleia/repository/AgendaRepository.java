@@ -1,7 +1,6 @@
 package com.vargas.leo.gerenciadorassembleia.repository;
 
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
-import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

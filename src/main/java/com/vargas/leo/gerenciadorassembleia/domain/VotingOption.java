@@ -11,7 +11,7 @@ public enum VotingOption {
         this.option = option;
     }
 
-    public String getDescription() {
+    public String getOption() {
         return this.option;
     }
 }
