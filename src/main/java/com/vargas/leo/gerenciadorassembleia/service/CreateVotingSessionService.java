@@ -5,6 +5,7 @@ import com.vargas.leo.gerenciadorassembleia.controller.response.CreateVotingSess
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
 import com.vargas.leo.gerenciadorassembleia.domain.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
+import com.vargas.leo.gerenciadorassembleia.domain.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
@@ -38,16 +39,18 @@ public class CreateVotingSessionService {
         }
 
         this.validateAgendaStatus(agenda);
+        agendaRepository.save(agenda);
+
         VotingSession votingSession = new VotingSession(agenda);
         this.adjustVotingSessionTimeLimit(votingSession, votingSessionRequest.getFinalDateTime());
-
+        votingSession.setStatus(VotingSessionStatus.opened);
+        votingSessionRepository.save(votingSession);
         return votingSession;
     }
 
     private void validateAgendaStatus(Agenda agenda) {
         if (AgendaStatus.created.equals(agenda.getStatus())) {
             agenda.setStatus(AgendaStatus.open);
-            agendaRepository.save(agenda);
         } else {
             throw new BusinessException("agenda.already.has.voting.session");
         }
@@ -57,7 +60,6 @@ public class CreateVotingSessionService {
         boolean validRequestTimeLimit = votingSessionValidator.validateFinalDateTime(finalTimeLimit);
         if (validRequestTimeLimit) {
             votingSession.setFinalDateTime(finalTimeLimit);
-            votingSessionRepository.save(votingSession);
         } else {
             log.info("request.invalid.time.limit.for.voting.session");
         }
