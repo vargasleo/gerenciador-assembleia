@@ -17,4 +17,5 @@ public class CreateVotingSessionResponse {
     private LocalDateTime finalDateTime;
 
     private String id;
+
 }

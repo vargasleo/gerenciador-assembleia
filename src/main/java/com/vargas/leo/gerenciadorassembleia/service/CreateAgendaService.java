@@ -19,6 +19,7 @@ public class CreateAgendaService {
     private final UserValidator userValidator;
     private final AgendaValidator agendaValidator;
     private final ModelMapper mapper;
+
     public CreateAgendaResponse createAgenda(CreateAgendaRequest createAgendaRequest) {
         return mapper.map(this.create(createAgendaRequest), CreateAgendaResponse.class);
     }
@@ -30,4 +31,5 @@ public class CreateAgendaService {
         agendaRepository.save(agenda);
         return agenda;
     }
+
 }

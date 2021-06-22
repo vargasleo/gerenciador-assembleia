@@ -14,4 +14,5 @@ public class UserValidator {
             throw new BusinessException(INVALID_USER);
         }
     }
+
 }

@@ -89,4 +89,5 @@ public class CreateAgendaServiceTest {
         verify(userValidator).validateUserId(userId);
         verify(agendaRepository).save(result);
     }
+
 }

@@ -91,11 +91,11 @@ public class RegisterVoteService {
     }
 
     private void incrementYesOnVote(VotingSession votingSession) {
-        votingSession.setYesVotes(votingSession.getYesVotes()+1);
+        votingSession.setYesVotes(votingSession.getYesVotes() + 1);
     }
 
     private void incrementNoOnVote(VotingSession votingSession) {
-        votingSession.setNoVotes(votingSession.getNoVotes()+1);
+        votingSession.setNoVotes(votingSession.getNoVotes() + 1);
     }
 
 }

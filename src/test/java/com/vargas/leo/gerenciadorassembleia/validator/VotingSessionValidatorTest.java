@@ -31,4 +31,5 @@ public class VotingSessionValidatorTest {
         boolean result = votingSessionValidator.validateFinalDateTime(finalDateTime);
         assertFalse(result);
     }
+
 }

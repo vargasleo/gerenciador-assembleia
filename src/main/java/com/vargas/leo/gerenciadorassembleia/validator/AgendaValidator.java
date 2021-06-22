@@ -14,4 +14,5 @@ public class AgendaValidator {
             throw new BusinessException(INVALID_SUBJECT);
         }
     }
+
 }

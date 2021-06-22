@@ -32,4 +32,5 @@ public class RegisterUserServiceTest {
 
         verify(userRepository).save(any(User.class));
     }
+
 }

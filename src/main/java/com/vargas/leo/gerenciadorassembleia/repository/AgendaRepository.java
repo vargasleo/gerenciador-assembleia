@@ -18,10 +18,11 @@ public class AgendaRepository {
 
     public Agenda findById(String agendaId) {
         for (Agenda a : agendaRepository) {
-            if(a.getId().equals(agendaId)) {
+            if (a.getId().equals(agendaId)) {
                 return a;
             }
         }
         return null;
     }
+
 }

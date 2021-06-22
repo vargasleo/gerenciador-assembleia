@@ -15,4 +15,5 @@ public class CreateUserRequest {
     @NotNull(message = "must.not.be.null")
     @NotEmpty(message = "must.not.be.empty")
     private String name;
+
 }

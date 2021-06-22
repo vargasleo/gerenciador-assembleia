@@ -13,7 +13,7 @@ public class UserRepository {
 
     public User findById(String userId) {
         for (User u : userRepository) {
-            if(u.getId().equals(userId)) {
+            if (u.getId().equals(userId)) {
                 return u;
             }
         }
