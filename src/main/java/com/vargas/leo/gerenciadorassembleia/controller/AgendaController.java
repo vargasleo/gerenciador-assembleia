@@ -27,7 +27,7 @@ public class AgendaController {
     @PostMapping("create/agenda")
     @ResponseStatus(HttpStatus.CREATED)
     public CreateAgendaResponse createAgenda(@RequestBody @Valid CreateAgendaRequest agendaRequest) {
-        return createAgendaService.create(agendaRequest);
+        return createAgendaService.createAgenda(agendaRequest);
     }
 
     @PostMapping("create/voting-session")
