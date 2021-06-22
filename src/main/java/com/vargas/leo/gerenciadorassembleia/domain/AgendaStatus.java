@@ -12,7 +12,4 @@ public enum AgendaStatus {
         this.status = status;
     }
 
-    public String getDescription() {
-        return this.status;
-    }
 }

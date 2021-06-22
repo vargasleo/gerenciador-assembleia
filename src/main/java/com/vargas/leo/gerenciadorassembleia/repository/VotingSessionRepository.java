@@ -18,10 +18,11 @@ public class VotingSessionRepository {
 
     public VotingSession findById(String votingSessionId) {
         for (VotingSession v : votingSessionRepository) {
-            if(v.getId().equals(votingSessionId)) {
+            if (v.getId().equals(votingSessionId)) {
                 return v;
             }
         }
         return null;
     }
+
 }

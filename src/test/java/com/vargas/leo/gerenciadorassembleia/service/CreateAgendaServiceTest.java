@@ -1,11 +1,10 @@
 package com.vargas.leo.gerenciadorassembleia.service;
 
 import com.vargas.leo.gerenciadorassembleia.controller.request.CreateAgendaRequest;
-import com.vargas.leo.gerenciadorassembleia.controller.response.CreateAgendaResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
-import com.vargas.leo.gerenciadorassembleia.domain.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
+import com.vargas.leo.gerenciadorassembleia.validator.AgendaValidator;
 import com.vargas.leo.gerenciadorassembleia.validator.UserValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.utility.RandomString;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,25 +29,33 @@ public class CreateAgendaServiceTest {
     private AgendaRepository agendaRepository;
 
     @Mock
+    private AgendaValidator agendaValidator;
+
+    @Mock
     private ModelMapper modelMapper;
 
     private final String userId = "mockUserId";
     private final String mockSubject = "mockSubject";
 
-    @Test
-    public void shouldCreateAgendaWhenValidUser() {
-        CreateAgendaRequest request = new CreateAgendaRequest(userId, mockSubject);
-        Agenda agenda = new Agenda(mockSubject, AgendaStatus.open);
-        CreateAgendaResponse response = new CreateAgendaResponse(mockSubject, AgendaStatus.created, RandomString.make());
+    @Test(expected = BusinessException.class)
+    public void shouldNotCreateAgendaWhenHasNoSubject() {
+        CreateAgendaRequest request = new CreateAgendaRequest(userId, null);
 
-        when(agendaRepository.save(any(Agenda.class))).thenReturn(agenda);
-        when(modelMapper.map(agenda, CreateAgendaResponse.class)).thenReturn(response);
+        doThrow(new BusinessException(agendaValidator.INVALID_SUBJECT))
+                .when(agendaValidator).validateAgendaSubject(null);
 
-        createAgendaService.create(request);
+        try {
+            createAgendaService.create(request);
+        } catch (BusinessException e) {
+            assertEquals(agendaValidator.INVALID_SUBJECT, e.getMessage());
 
-        verify(userValidator).validateUserId(userId);
-        verify(agendaRepository).save(any(Agenda.class));
-        verify(modelMapper).map(agenda, CreateAgendaResponse.class);
+            verify(agendaValidator).validateAgendaSubject(null);
+            verify(userValidator, never()).validateUserId(userId);
+            verify(agendaRepository, never()).save(any(Agenda.class));
+
+            throw e;
+        }
+
     }
 
     @Test(expected = BusinessException.class)
@@ -57,10 +64,30 @@ public class CreateAgendaServiceTest {
 
         doThrow(new BusinessException(userValidator.INVALID_USER)).when(userValidator).validateUserId(userId);
 
-        createAgendaService.create(request);
+        try {
+            createAgendaService.create(request);
+        } catch (BusinessException e) {
+            assertEquals(userValidator.INVALID_USER, e.getMessage());
+
+            verify(agendaValidator).validateAgendaSubject(mockSubject);
+            verify(userValidator).validateUserId(userId);
+            verify(agendaRepository, never()).save(any());
+
+            throw e;
+        }
+
+    }
+
+    @Test
+    public void shouldCreateAgendaWhenValidUserAndValidSubject() {
+        CreateAgendaRequest request = new CreateAgendaRequest(userId, mockSubject);
+
+        Agenda result = createAgendaService.create(request);
+
+        assertEquals(mockSubject, result.getSubject());
 
         verify(userValidator).validateUserId(userId);
-        verify(agendaRepository, never()).save(any());
-        verify(modelMapper, never()).map(any(), CreateAgendaResponse.class);
+        verify(agendaRepository).save(result);
     }
+
 }

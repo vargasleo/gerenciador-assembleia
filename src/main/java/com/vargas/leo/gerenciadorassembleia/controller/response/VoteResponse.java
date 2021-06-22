@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @RequiredArgsConstructor
 public class VoteResponse {
+
     private final LocalDateTime votedAt = LocalDateTime.now();
     private final VotingOption votingOption;
+
 }

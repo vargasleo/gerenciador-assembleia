@@ -20,4 +20,5 @@ public class CreateVotingSessionRequest {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private final LocalDateTime finalDateTime;
+
 }

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("user")
 @RequiredArgsConstructor
@@ -16,7 +18,7 @@ public class UserController {
 
     @PostMapping("create/user")
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateUserResponse createUser(@RequestBody CreateUserRequest createUserRequest) {
+    public CreateUserResponse createUser(@RequestBody @Valid CreateUserRequest createUserRequest) {
         return registerUserService.createUser(createUserRequest);
     }
 

@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 public class VotingSession {
 
-    public static final LocalDateTime DEFAULT_FINAL_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,3,0));
+    public static final LocalDateTime DEFAULT_FINAL_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 3, 0));
 
     private final String id = RandomString.make();
     private final LocalDateTime createdAt = LocalDateTime.now();

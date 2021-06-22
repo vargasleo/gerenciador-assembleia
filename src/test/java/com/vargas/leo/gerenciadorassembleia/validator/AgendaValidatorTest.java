@@ -6,26 +6,26 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UserValidatorTest {
+public class AgendaValidatorTest {
 
     @InjectMocks
-    private UserValidator userValidator;
+    private AgendaValidator agendaValidator;
 
     @Test
     public void shouldDoNothingWhenValidUserId() {
-        String userId = "mockUserId";
-        userValidator.validateUserId(userId);
+        String subject = "mockHasTextAgenda";
+        agendaValidator.validateAgendaSubject(subject);
     }
 
     @Test(expected = BusinessException.class)
     public void shouldThrowExceptionWhenInvalidUserId() {
         try {
-            userValidator.validateUserId(null);
+            agendaValidator.validateAgendaSubject(null);
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER, e.getMessage());
+            assertEquals(agendaValidator.INVALID_SUBJECT, e.getMessage());
             throw e;
         }
     }

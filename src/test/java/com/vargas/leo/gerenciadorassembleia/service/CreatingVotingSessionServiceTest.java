@@ -136,4 +136,5 @@ public class CreatingVotingSessionServiceTest {
         verify(votingSessionValidator).validateFinalDateTime(invalidFinalDateTime);
         verify(votingSessionRepository).save(result);
     }
+
 }

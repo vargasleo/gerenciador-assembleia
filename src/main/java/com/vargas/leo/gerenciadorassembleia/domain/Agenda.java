@@ -12,4 +12,5 @@ public class Agenda {
     private final String id = RandomString.make();
     private String subject;
     private AgendaStatus status;
+
 }
