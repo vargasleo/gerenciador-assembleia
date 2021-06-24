@@ -7,6 +7,7 @@ import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VoteRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
+import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -33,10 +34,12 @@ public class RegisterVoteServiceTest {
     @Mock
     private VotingSessionRepository votingSessionRepository;
 
+    @Mock
+    private VotingSessionValidator votingSessionValidator;
+
     private final String mockUserId = "mockUserId";
     private final String mockVotingSessionId = "mockVotingSessionId";
     private final String validVotingOptionYes = "yes";
-    private final String validVotingOptionNo = "no";
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenUserNotFound() {
@@ -95,14 +98,14 @@ public class RegisterVoteServiceTest {
                 .thenReturn(votingSession);
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
+        doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
 
         try {
             registerVoteService.register(voteRequest);
         } catch (BusinessException e) {
-            assertEquals("no.valid.voting.session.status", e.getMessage());
-
             verify(userRepository).findById(mockUserId);
             verify(votingSessionRepository).findById(mockVotingSessionId);
+            verify(votingSessionValidator).validateVotingSessionStatus(votingSession);
             verify(voteRepository).findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId);
             verify(voteRepository, never()).save(any(Vote.class));
 
@@ -127,14 +130,14 @@ public class RegisterVoteServiceTest {
                 .thenReturn(votingSession);
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
+        doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
 
         try {
             registerVoteService.register(voteRequest);
         } catch (BusinessException e) {
-            assertEquals("voting.session.isnt.open", e.getMessage());
-
             verify(userRepository).findById(mockUserId);
             verify(votingSessionRepository).findById(mockVotingSessionId);
+            verify(votingSessionValidator).validateVotingSessionStatus(votingSession);
             verify(voteRepository).findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId);
             verify(voteRepository, never()).save(any(Vote.class));
 
@@ -271,6 +274,7 @@ public class RegisterVoteServiceTest {
 
     @Test
     public void shouldRegisterVoteWhenValidRequestAndVoteNoAndValidVotingSessionAndValidUser() {
+        String validVotingOptionNo = "no";
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionNo);
 
         User user = new User("mockUserName");
