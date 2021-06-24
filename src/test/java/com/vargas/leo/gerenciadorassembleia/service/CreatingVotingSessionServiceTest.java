@@ -67,7 +67,7 @@ public class CreatingVotingSessionServiceTest {
             assertEquals("agenda.already.has.voting.session", e.getMessage());
 
             verify(agendaRepository).findById(agendaId);
-            verify(agendaRepository, never()).save(agenda);
+            verifyNoInteractions(agendaRepository.save(agenda));
 
             throw e;
         }

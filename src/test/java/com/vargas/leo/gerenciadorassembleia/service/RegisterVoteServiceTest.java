@@ -36,7 +36,6 @@ public class RegisterVoteServiceTest {
     private final String mockUserId = "mockUserId";
     private final String mockVotingSessionId = "mockVotingSessionId";
     private final String validVotingOptionYes = "yes";
-    private final String validVotingOptionNo = "no";
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenUserNotFound() {
@@ -271,6 +270,7 @@ public class RegisterVoteServiceTest {
 
     @Test
     public void shouldRegisterVoteWhenValidRequestAndVoteNoAndValidVotingSessionAndValidUser() {
+        String validVotingOptionNo = "no";
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionNo);
 
         User user = new User("mockUserName");
