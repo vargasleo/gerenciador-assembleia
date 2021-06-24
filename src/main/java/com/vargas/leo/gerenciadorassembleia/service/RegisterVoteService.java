@@ -8,6 +8,7 @@ import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VoteRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
+import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,11 @@ public class RegisterVoteService {
     private final VoteRepository voteRepository;
     private final UserRepository userRepository;
     private final VotingSessionRepository votingSessionRepository;
+    private final VotingSessionValidator votingSessionValidator;
 
     public VoteResponse registerVote(VoteRequest voteRequest) {
         Vote vote = this.register(voteRequest);
-        return new VoteResponse(vote.getVote());
+        return new VoteResponse(vote.getVote(), vote.getVotedAt());
     }
 
     protected Vote register(VoteRequest voteRequest) {
@@ -46,7 +48,7 @@ public class RegisterVoteService {
 
         VotingOption votingOption = this.validateVote(voteRequest.getVote());
 
-        this.validateVotingSessionStatus(vote.getVotingSession());
+        votingSessionValidator.validateVotingSessionStatus(vote.getVotingSession());
 
         this.registerVote(vote, votingOption);
 
@@ -64,15 +66,6 @@ public class RegisterVoteService {
             return VotingOption.valueOf(vote);
         } catch (Exception e) {
             throw new BusinessException("invalid.voting.option");
-        }
-    }
-
-    private void validateVotingSessionStatus(VotingSession votingSession) {
-        if (Objects.isNull(votingSession.getStatus())) {
-            throw new BusinessException("no.valid.voting.session.status");
-        }
-        if (!VotingSessionStatus.opened.equals(votingSession.getStatus())) {
-            throw new BusinessException("voting.session.isnt.open");
         }
     }
 

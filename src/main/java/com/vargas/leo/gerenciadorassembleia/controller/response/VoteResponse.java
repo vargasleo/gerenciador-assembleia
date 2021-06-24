@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class VoteResponse {
 
-    private final LocalDateTime votedAt = LocalDateTime.now();
     private final VotingOption votingOption;
+    private final LocalDateTime votedAt;
 
 }

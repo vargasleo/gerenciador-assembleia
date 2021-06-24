@@ -18,10 +18,12 @@ public class VotingSession {
 
     private final String id = RandomString.make();
     private final LocalDateTime createdAt = LocalDateTime.now();
-    private LocalDateTime finalDateTime = DEFAULT_FINAL_DATE_TIME;
-    private VotingOption winnerOption;
-    private VotingSessionStatus status;
     private final Agenda Agenda;
+    private LocalDateTime endedAt;
+    private LocalDateTime finalDateTime = DEFAULT_FINAL_DATE_TIME;
+    private VotingResult winnerOption;
+    private VotingResult looserOption;
+    private VotingSessionStatus status;
     private int yesVotes = 0;
     private int noVotes = 0;
 
