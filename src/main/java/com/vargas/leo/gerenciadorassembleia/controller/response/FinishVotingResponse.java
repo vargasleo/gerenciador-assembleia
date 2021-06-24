@@ -17,6 +17,5 @@ public class FinishVotingResponse {
     private final VotingResult looserOption;
     private final int yesVotes;
     private final int noVotes;
-    private final String subject;
 
 }

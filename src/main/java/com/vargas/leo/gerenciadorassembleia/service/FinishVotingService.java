@@ -8,8 +8,9 @@ import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -17,12 +18,17 @@ public class FinishVotingService {
 
     private final UserRepository userRepository;
     private final VotingSessionRepository votingSessionRepository;
-    private final ModelMapper mapper;
     private final VotingSessionValidator votingSessionValidator;
 
     public FinishVotingResponse finishVoting(FinishVotingRequest finishVotingRequest) {
         VotingSession votingSession = this.finishVotingAndCountVotes(finishVotingRequest);
-        return mapper.map(votingSession, FinishVotingResponse.class);
+        return new FinishVotingResponse(
+                LocalDateTime.now(),
+                votingSession.getWinnerOption(),
+                votingSession.getLooserOption(),
+                votingSession.getYesVotes(),
+                votingSession.getNoVotes()
+        );
     }
 
     protected VotingSession finishVotingAndCountVotes(FinishVotingRequest finishVotingRequest) {
