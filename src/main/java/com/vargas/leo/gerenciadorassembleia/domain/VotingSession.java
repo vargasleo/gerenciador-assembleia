@@ -4,7 +4,6 @@ import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingResult;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -17,7 +16,6 @@ import java.time.LocalTime;
 @Table(name = "voting-session")
 @Getter
 @Setter
-@RequiredArgsConstructor
 @NoArgsConstructor
 public class VotingSession {
 
