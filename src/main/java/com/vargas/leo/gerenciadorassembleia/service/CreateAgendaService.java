@@ -27,7 +27,9 @@ public class CreateAgendaService {
     protected Agenda create(CreateAgendaRequest createAgendaRequest) {
         agendaValidator.validateAgendaSubject(createAgendaRequest.getSubject());
         userValidator.validateUserId(createAgendaRequest.getUserId());
-        Agenda agenda = new Agenda(createAgendaRequest.getSubject(), AgendaStatus.created);
+        Agenda agenda = new Agenda();
+        agenda.setSubject(createAgendaRequest.getSubject());
+        agenda.setStatus(AgendaStatus.created);
         agendaRepository.save(agenda);
         return agenda;
     }

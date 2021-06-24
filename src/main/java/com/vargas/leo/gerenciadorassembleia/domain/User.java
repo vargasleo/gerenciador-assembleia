@@ -1,7 +1,7 @@
 package com.vargas.leo.gerenciadorassembleia.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "user")
 @Getter
 @Setter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
 
     @Id

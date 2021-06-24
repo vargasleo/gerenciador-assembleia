@@ -39,7 +39,8 @@ public class CreateVotingSessionService {
         this.validateAgendaStatus(agenda);
         agendaRepository.save(agenda);
 
-        VotingSession votingSession = new VotingSession(agenda);
+        VotingSession votingSession = new VotingSession();
+        votingSession.setAgenda(agenda);
         this.adjustVotingSessionTimeLimit(votingSession, votingSessionRequest.getFinalDateTime());
         votingSession.setStatus(VotingSessionStatus.opened);
         votingSessionRepository.save(votingSession);

@@ -3,6 +3,7 @@ package com.vargas.leo.gerenciadorassembleia.domain;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingResult;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,6 +18,7 @@ import java.time.LocalTime;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@NoArgsConstructor
 public class VotingSession {
 
     public static final LocalDateTime DEFAULT_FINAL_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 3, 0));
@@ -24,14 +26,14 @@ public class VotingSession {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-    private final String id;
+    private String id;
 
     @Column(name = "created_at")
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_agenda", referencedColumnName = "id_voting_session")
-    private final Agenda Agenda;
+    private Agenda Agenda;
 
     @Column(name = "ended_at")
     private LocalDateTime endedAt;
