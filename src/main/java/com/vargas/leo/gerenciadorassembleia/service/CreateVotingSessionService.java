@@ -3,9 +3,9 @@ package com.vargas.leo.gerenciadorassembleia.service;
 import com.vargas.leo.gerenciadorassembleia.controller.request.CreateVotingSessionRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.CreateVotingSessionResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
-import com.vargas.leo.gerenciadorassembleia.domain.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
-import com.vargas.leo.gerenciadorassembleia.domain.VotingSessionStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
@@ -33,10 +33,8 @@ public class CreateVotingSessionService {
     }
 
     protected VotingSession create(CreateVotingSessionRequest votingSessionRequest) {
-        Agenda agenda = agendaRepository.findById(votingSessionRequest.getAgendaId());
-        if (agenda == null) {
-            throw new NotFoundException("agenda.not.found");
-        }
+        Agenda agenda = agendaRepository.findById(votingSessionRequest.getAgendaId())
+                .orElseThrow(() -> new NotFoundException("agenda.not.found"));
 
         this.validateAgendaStatus(agenda);
         agendaRepository.save(agenda);

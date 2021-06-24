@@ -2,6 +2,9 @@ package com.vargas.leo.gerenciadorassembleia.service;
 
 import com.vargas.leo.gerenciadorassembleia.controller.request.FinishVotingRequest;
 import com.vargas.leo.gerenciadorassembleia.domain.*;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingResult;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
@@ -12,6 +15,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,7 +44,7 @@ public class FinishVotingServiceTest {
     public void shouldThrowExceptionWhenUserNotFound() {
         FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, null);
 
-        when(userRepository.findById(mockUserId)).thenReturn(null);
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.empty());
 
         try {
             finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
@@ -59,8 +64,8 @@ public class FinishVotingServiceTest {
 
         User user = new User("mockUserName");
 
-        when(userRepository.findById(mockUserId)).thenReturn(user);
-        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(null);
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.empty());
 
         try {
             finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
@@ -84,8 +89,8 @@ public class FinishVotingServiceTest {
 
         VotingSession votingSession = new VotingSession(agenda);
 
-        when(userRepository.findById(mockUserId)).thenReturn(user);
-        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(votingSession);
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
         doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
 
         try {
@@ -111,9 +116,8 @@ public class FinishVotingServiceTest {
         VotingSession votingSession = new VotingSession(agenda);
         votingSession.setYesVotes(1);
 
-        when(userRepository.findById(mockUserId)).thenReturn(user);
-        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(votingSession);
-
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
 
         VotingSession result = finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
 
@@ -139,9 +143,8 @@ public class FinishVotingServiceTest {
         VotingSession votingSession = new VotingSession(agenda);
         votingSession.setNoVotes(1);
 
-        when(userRepository.findById(mockUserId)).thenReturn(user);
-        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(votingSession);
-
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
 
         VotingSession result = finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
 
@@ -166,9 +169,8 @@ public class FinishVotingServiceTest {
 
         VotingSession votingSession = new VotingSession(agenda);
 
-        when(userRepository.findById(mockUserId)).thenReturn(user);
-        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(votingSession);
-
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
 
         VotingSession result = finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
 

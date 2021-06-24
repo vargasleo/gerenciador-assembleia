@@ -1,28 +1,14 @@
 package com.vargas.leo.gerenciadorassembleia.repository;
 
 import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
-import org.springframework.stereotype.Component;
+import org.springframework.data.repository.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
-@Component
-public class VotingSessionRepository {
+public interface VotingSessionRepository extends Repository<VotingSession, Integer> {
 
-    private final List<VotingSession> votingSessionRepository = new ArrayList<>();
+    VotingSession save(VotingSession votingSession);
 
-    public VotingSession save(VotingSession votingSession) {
-        votingSessionRepository.add(votingSession);
-        return votingSession;
-    }
-
-    public VotingSession findById(String votingSessionId) {
-        for (VotingSession v : votingSessionRepository) {
-            if (v.getId().equals(votingSessionId)) {
-                return v;
-            }
-        }
-        return null;
-    }
+    Optional<VotingSession> findById(String votingSessionId);
 
 }

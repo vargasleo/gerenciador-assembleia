@@ -1,4 +1,4 @@
-package com.vargas.leo.gerenciadorassembleia.domain;
+package com.vargas.leo.gerenciadorassembleia.domain.enums;
 
 public enum AgendaStatus {
 
@@ -6,10 +6,7 @@ public enum AgendaStatus {
     open("opened agenda"),
     closed("closed agenda");
 
-    private final String status;
-
     AgendaStatus(String status) {
-        this.status = status;
     }
 
 }

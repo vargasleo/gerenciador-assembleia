@@ -1,28 +1,14 @@
 package com.vargas.leo.gerenciadorassembleia.repository;
 
 import com.vargas.leo.gerenciadorassembleia.domain.User;
-import org.springframework.stereotype.Component;
+import org.springframework.data.repository.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
-@Component
-public class UserRepository {
+public interface UserRepository extends Repository<User, Integer> {
 
-    private final List<User> userRepository = new ArrayList<>();
+    User save(User user);
 
-    public User findById(String userId) {
-        for (User u : userRepository) {
-            if (u.getId().equals(userId)) {
-                return u;
-            }
-        }
-        return null;
-    }
-
-    public User save(User user) {
-        userRepository.add(user);
-        return user;
-    }
+    Optional<User> findById(String userId);
 
 }

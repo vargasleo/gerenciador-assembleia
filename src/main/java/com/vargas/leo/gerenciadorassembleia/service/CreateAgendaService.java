@@ -3,7 +3,7 @@ package com.vargas.leo.gerenciadorassembleia.service;
 import com.vargas.leo.gerenciadorassembleia.controller.request.CreateAgendaRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.CreateAgendaResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
-import com.vargas.leo.gerenciadorassembleia.domain.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.AgendaValidator;
 import com.vargas.leo.gerenciadorassembleia.validator.UserValidator;

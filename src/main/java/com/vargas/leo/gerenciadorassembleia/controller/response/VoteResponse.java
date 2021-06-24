@@ -1,6 +1,6 @@
 package com.vargas.leo.gerenciadorassembleia.controller.response;
 
-import com.vargas.leo.gerenciadorassembleia.domain.VotingOption;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

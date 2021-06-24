@@ -2,6 +2,8 @@ package com.vargas.leo.gerenciadorassembleia.service;
 
 import com.vargas.leo.gerenciadorassembleia.controller.request.VoteRequest;
 import com.vargas.leo.gerenciadorassembleia.domain.*;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
@@ -45,7 +47,7 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenUserNotFound() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, null, null);
 
-        when(userRepository.findById(mockUserId)).thenReturn(null);
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.empty());
 
         try {
             registerVoteService.register(voteRequest);
@@ -65,8 +67,8 @@ public class RegisterVoteServiceTest {
 
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, null);
 
-        when(userRepository.findById(mockUserId)).thenReturn(user);
-        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(null);
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.empty());
 
         try {
             registerVoteService.register(voteRequest);
@@ -93,9 +95,9 @@ public class RegisterVoteServiceTest {
 
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
         doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
@@ -125,9 +127,9 @@ public class RegisterVoteServiceTest {
         Vote vote = new Vote(user, votingSession);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
         doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
@@ -157,9 +159,9 @@ public class RegisterVoteServiceTest {
         Vote vote = new Vote(user, votingSession);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
 
@@ -190,9 +192,9 @@ public class RegisterVoteServiceTest {
         Vote vote = new Vote(user, votingSession);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
 
@@ -223,9 +225,9 @@ public class RegisterVoteServiceTest {
         vote.setVote(VotingOption.yes);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
 
@@ -253,9 +255,9 @@ public class RegisterVoteServiceTest {
         votingSession.setStatus(VotingSessionStatus.opened);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.empty());
 
@@ -283,9 +285,9 @@ public class RegisterVoteServiceTest {
         votingSession.setStatus(VotingSessionStatus.opened);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.empty());
 

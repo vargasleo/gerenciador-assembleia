@@ -2,7 +2,7 @@ package com.vargas.leo.gerenciadorassembleia.service;
 
 import com.vargas.leo.gerenciadorassembleia.controller.request.CreateVotingSessionRequest;
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
-import com.vargas.leo.gerenciadorassembleia.domain.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
@@ -18,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -43,7 +44,7 @@ public class CreatingVotingSessionServiceTest {
     public void shouldThrowExceptionWhenInvalidAgendaId() {
         CreateVotingSessionRequest request = new CreateVotingSessionRequest(null, null);
 
-        when(agendaRepository.findById(null)).thenReturn(null);
+        when(agendaRepository.findById(null)).thenReturn(Optional.empty());
 
         try {
             createVotingSessionService.create(request);
@@ -59,7 +60,7 @@ public class CreatingVotingSessionServiceTest {
         CreateVotingSessionRequest request = new CreateVotingSessionRequest(agendaId, null);
         Agenda agenda = new Agenda();
 
-        when(agendaRepository.findById(agendaId)).thenReturn(agenda);
+        when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
 
         try {
             createVotingSessionService.create(request);
@@ -81,7 +82,7 @@ public class CreatingVotingSessionServiceTest {
         Agenda agenda = new Agenda();
         agenda.setStatus(AgendaStatus.created);
 
-        when(agendaRepository.findById(agendaId)).thenReturn(agenda);
+        when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
         when(votingSessionValidator.validateFinalDateTime(validTimeLimit)).thenReturn(true);
 
         VotingSession result = createVotingSessionService.create(request);
@@ -101,7 +102,7 @@ public class CreatingVotingSessionServiceTest {
         Agenda agenda = new Agenda();
         agenda.setStatus(AgendaStatus.created);
 
-        when(agendaRepository.findById(agendaId)).thenReturn(agenda);
+        when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
         when(votingSessionValidator.validateFinalDateTime(null)).thenReturn(false);
 
         VotingSession result = createVotingSessionService.create(request);
@@ -123,7 +124,7 @@ public class CreatingVotingSessionServiceTest {
         Agenda agenda = new Agenda();
         agenda.setStatus(AgendaStatus.created);
 
-        when(agendaRepository.findById(agendaId)).thenReturn(agenda);
+        when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
         when(votingSessionValidator.validateFinalDateTime(invalidFinalDateTime)).thenReturn(false);
 
         VotingSession result = createVotingSessionService.create(request);
