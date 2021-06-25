@@ -1,7 +1,8 @@
 package com.vargas.leo.gerenciadorassembleia.controller.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
@@ -9,15 +10,16 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 public class FinishVotingRequest {
 
     @NotNull(message = "must.not.be.null")
     @NotEmpty(message = "must.not.be.empty")
-    private final String userId;
+    private Integer userId;
 
     @NotNull(message = "must.not.be.null")
     @NotEmpty(message = "must.not.be.empty")
-    private final String votingSessionId;
+    private Integer votingSessionId;
 
 }

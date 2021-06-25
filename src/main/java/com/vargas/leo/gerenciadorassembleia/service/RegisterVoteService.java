@@ -3,6 +3,7 @@ package com.vargas.leo.gerenciadorassembleia.service;
 import com.vargas.leo.gerenciadorassembleia.controller.request.VoteRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.VoteResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.*;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
@@ -29,18 +30,14 @@ public class RegisterVoteService {
     }
 
     protected Vote register(VoteRequest voteRequest) {
-        User user = userRepository.findById(voteRequest.getUserId());
-        if (user == null) {
-            throw new NotFoundException("user.not.found");
-        }
+        User user = userRepository.findById(voteRequest.getUserId())
+                .orElseThrow(() -> new NotFoundException("user.not.found"));
 
-        VotingSession votingSession = votingSessionRepository.findById(voteRequest.getVotingSessionId());
-        if (votingSession == null) {
-            throw new NotFoundException("voting.session.not.found");
-        }
+        VotingSession votingSession = votingSessionRepository.findById(voteRequest.getVotingSessionId())
+                .orElseThrow(() -> new NotFoundException("voting.session.not.found"));
 
         Vote vote = voteRepository.findByUserIdAndVotingSessionId(voteRequest.getUserId(), voteRequest.getVotingSessionId())
-                .orElse(new Vote(user, votingSession));
+                .orElseGet(() -> this.createNewVote(user, votingSession));
 
         if (this.isVoteAlreadyRegistered(vote)) {
             throw new BusinessException("user.already.voted.in.this.session");
@@ -53,6 +50,13 @@ public class RegisterVoteService {
         this.registerVote(vote, votingOption);
 
         voteRepository.save(vote);
+        return vote;
+    }
+
+    private Vote createNewVote(User user, VotingSession votingSession) {
+        Vote vote = new Vote();
+        vote.setUser(user);
+        vote.setVotingSession(votingSession);
         return vote;
     }
 

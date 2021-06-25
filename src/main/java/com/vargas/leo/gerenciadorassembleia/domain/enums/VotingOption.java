@@ -1,4 +1,4 @@
-package com.vargas.leo.gerenciadorassembleia.domain;
+package com.vargas.leo.gerenciadorassembleia.domain.enums;
 
 public enum VotingOption {
 

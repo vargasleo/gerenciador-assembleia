@@ -19,7 +19,9 @@ public class RegisterUserService {
     }
 
     protected User create(CreateUserRequest createUserRequest) {
-        return userRepository.save(new User(createUserRequest.getName()));
+        User user = new User();
+        user.setName(createUserRequest.getName());
+        return userRepository.save(user);
     }
 
 }

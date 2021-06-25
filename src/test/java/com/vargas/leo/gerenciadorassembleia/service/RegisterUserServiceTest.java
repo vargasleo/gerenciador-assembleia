@@ -24,7 +24,7 @@ public class RegisterUserServiceTest {
     public void shouldRegisterUser() {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setName("mockName");
-        User response = new User(createUserRequest.getName());
+        User response = new User();
 
         when(userRepository.save(any(User.class))).thenReturn(response);
 

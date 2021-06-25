@@ -1,14 +1,23 @@
 package com.vargas.leo.gerenciadorassembleia.domain;
 
 import lombok.*;
-import org.modelmapper.internal.bytebuddy.utility.RandomString;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users")
 @Getter
 @Setter
-@AllArgsConstructor
 public class User {
 
-    private final String id = RandomString.make();
-    private final String name;
+    @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
+    @Column(name = "id_user")
+    private Integer id;
+
+    @Column(name = "name")
+    private String name;
 
 }

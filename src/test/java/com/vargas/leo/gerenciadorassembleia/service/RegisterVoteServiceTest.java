@@ -2,6 +2,8 @@ package com.vargas.leo.gerenciadorassembleia.service;
 
 import com.vargas.leo.gerenciadorassembleia.controller.request.VoteRequest;
 import com.vargas.leo.gerenciadorassembleia.domain.*;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
@@ -37,15 +39,16 @@ public class RegisterVoteServiceTest {
     @Mock
     private VotingSessionValidator votingSessionValidator;
 
-    private final String mockUserId = "mockUserId";
-    private final String mockVotingSessionId = "mockVotingSessionId";
+    private final Integer mockUserId = 1;
+    private final Integer mockVotingSessionId = 1;
     private final String validVotingOptionYes = "yes";
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenUserNotFound() {
-        VoteRequest voteRequest = new VoteRequest(mockUserId, null, null);
+        VoteRequest voteRequest = new VoteRequest();
+        voteRequest.setUserId(mockUserId);
 
-        when(userRepository.findById(mockUserId)).thenReturn(null);
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.empty());
 
         try {
             registerVoteService.register(voteRequest);
@@ -61,12 +64,12 @@ public class RegisterVoteServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenVotingSessionNotFound() {
-        User user = new User("mockUserName");
+        User user = new User();
 
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, null);
 
-        when(userRepository.findById(mockUserId)).thenReturn(user);
-        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(null);
+        when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.empty());
 
         try {
             registerVoteService.register(voteRequest);
@@ -85,17 +88,18 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenVotingSessionStatusIsNull() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionYes);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
 
-        Vote vote = new Vote(user, votingSession);
-
+        Vote vote = new Vote();
+        vote.setUser(user);
+        vote.setVotingSession(votingSession);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
         doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
@@ -117,17 +121,19 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenVotingSessionStatusIsntOpen() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionYes);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.closed);
 
-        Vote vote = new Vote(user, votingSession);
+        Vote vote = new Vote();
+        vote.setUser(user);
+        vote.setVotingSession(votingSession);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
         doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
@@ -149,17 +155,17 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenVotingOptionIsNull() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, null);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
-        Vote vote = new Vote(user, votingSession);
+        Vote vote = new Vote();
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
 
@@ -182,17 +188,17 @@ public class RegisterVoteServiceTest {
         String invalidVotingOption = "mockInvalidVotingOption";
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, invalidVotingOption);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
-        Vote vote = new Vote(user, votingSession);
+        Vote vote = new Vote();
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
 
@@ -214,18 +220,18 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenUserAlreadyVoted() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, null);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
-        Vote vote = new Vote(user, votingSession);
+        Vote vote = new Vote();
         vote.setVote(VotingOption.yes);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.of(vote));
 
@@ -247,15 +253,15 @@ public class RegisterVoteServiceTest {
     public void shouldRegisterVoteWhenValidRequestAndVoteYesAndValidVotingSessionAndValidUser() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionYes);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.empty());
 
@@ -277,15 +283,15 @@ public class RegisterVoteServiceTest {
         String validVotingOptionNo = "no";
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionNo);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
         when(userRepository.findById(mockUserId))
-                .thenReturn(user);
+                .thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId))
-                .thenReturn(votingSession);
+                .thenReturn(Optional.of(votingSession));
         when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
                 .thenReturn(Optional.empty());
 

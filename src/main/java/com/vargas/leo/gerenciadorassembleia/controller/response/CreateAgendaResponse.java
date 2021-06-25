@@ -1,6 +1,6 @@
 package com.vargas.leo.gerenciadorassembleia.controller.response;
 
-import com.vargas.leo.gerenciadorassembleia.domain.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import lombok.*;
 
 @Setter
@@ -11,6 +11,6 @@ public class CreateAgendaResponse {
 
     private String subject;
     private AgendaStatus status;
-    private String id;
+    private Integer id;
 
 }

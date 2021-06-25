@@ -9,7 +9,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class CreateUserResponse {
 
-    private final String id;
+    private final Integer id;
     private final String name;
 
 }
