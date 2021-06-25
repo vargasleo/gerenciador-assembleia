@@ -30,7 +30,7 @@ public class VotingSession {
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_agenda", referencedColumnName = "id_voting_session")
+    @JoinColumn(name = "id_agenda")
     private Agenda Agenda;
 
     @Column(name = "ended_at")
