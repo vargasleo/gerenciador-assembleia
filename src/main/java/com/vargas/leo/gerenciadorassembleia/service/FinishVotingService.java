@@ -3,6 +3,9 @@ package com.vargas.leo.gerenciadorassembleia.service;
 import com.vargas.leo.gerenciadorassembleia.controller.request.FinishVotingRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.FinishVotingResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.*;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingResult;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
@@ -24,7 +27,7 @@ public class FinishVotingService {
         VotingSession votingSession = this.finishVotingAndCountVotes(finishVotingRequest);
         return new FinishVotingResponse(
                 LocalDateTime.now(),
-                votingSession.getWinnerOption(),
+                votingSession.getResult(),
                 votingSession.getLooserOption(),
                 votingSession.getYesVotes(),
                 votingSession.getNoVotes()
@@ -32,15 +35,11 @@ public class FinishVotingService {
     }
 
     protected VotingSession finishVotingAndCountVotes(FinishVotingRequest finishVotingRequest) {
-        User user = userRepository.findById(finishVotingRequest.getUserId());
-        if (user == null) {
-            throw new NotFoundException("user.not.found");
-        }
+        User user = userRepository.findById(finishVotingRequest.getUserId())
+                .orElseThrow(() -> new NotFoundException("user.not.found"));
 
-        VotingSession votingSession = votingSessionRepository.findById(finishVotingRequest.getVotingSessionId());
-        if (votingSession == null) {
-            throw new NotFoundException("voting.session.not.found");
-        }
+        VotingSession votingSession = votingSessionRepository.findById(finishVotingRequest.getVotingSessionId())
+                .orElseThrow(() -> new NotFoundException("voting.session.not.found"));
 
         votingSessionValidator.validateVotingSessionStatus(votingSession);
 
@@ -63,13 +62,13 @@ public class FinishVotingService {
 
     private void defineVotingSessionResult(VotingSession votingSession) {
         if (votingSession.getYesVotes() > votingSession.getNoVotes()) {
-            votingSession.setWinnerOption(VotingResult.yes);
+            votingSession.setResult(VotingResult.yes);
             votingSession.setLooserOption(VotingResult.no);
         } else if (votingSession.getNoVotes() > votingSession.getYesVotes()) {
-            votingSession.setWinnerOption(VotingResult.no);
+            votingSession.setResult(VotingResult.no);
             votingSession.setLooserOption(VotingResult.yes);
         } else {
-            votingSession.setWinnerOption(VotingResult.draw);
+            votingSession.setResult(VotingResult.draw);
             votingSession.setLooserOption(VotingResult.draw);
         }
     }

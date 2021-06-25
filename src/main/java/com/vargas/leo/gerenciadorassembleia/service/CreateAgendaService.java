@@ -3,7 +3,7 @@ package com.vargas.leo.gerenciadorassembleia.service;
 import com.vargas.leo.gerenciadorassembleia.controller.request.CreateAgendaRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.CreateAgendaResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
-import com.vargas.leo.gerenciadorassembleia.domain.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.AgendaValidator;
 import com.vargas.leo.gerenciadorassembleia.validator.UserValidator;
@@ -27,7 +27,9 @@ public class CreateAgendaService {
     protected Agenda create(CreateAgendaRequest createAgendaRequest) {
         agendaValidator.validateAgendaSubject(createAgendaRequest.getSubject());
         userValidator.validateUserId(createAgendaRequest.getUserId());
-        Agenda agenda = new Agenda(createAgendaRequest.getSubject(), AgendaStatus.created);
+        Agenda agenda = new Agenda();
+        agenda.setSubject(createAgendaRequest.getSubject());
+        agenda.setStatus(AgendaStatus.created);
         agendaRepository.save(agenda);
         return agenda;
     }

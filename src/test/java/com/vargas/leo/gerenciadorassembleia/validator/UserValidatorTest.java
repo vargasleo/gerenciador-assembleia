@@ -16,7 +16,7 @@ public class UserValidatorTest {
 
     @Test
     public void shouldDoNothingWhenValidUserId() {
-        String userId = "mockUserId";
+        Integer userId = 1;
         userValidator.validateUserId(userId);
     }
 

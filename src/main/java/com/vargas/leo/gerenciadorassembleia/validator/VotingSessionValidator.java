@@ -1,7 +1,7 @@
 package com.vargas.leo.gerenciadorassembleia.validator;
 
 import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
-import com.vargas.leo.gerenciadorassembleia.domain.VotingSessionStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import org.springframework.stereotype.Component;
 

@@ -16,6 +16,6 @@ public class CreateVotingSessionResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime finalDateTime;
 
-    private String id;
+    private Integer id;
 
 }

@@ -1,28 +1,14 @@
 package com.vargas.leo.gerenciadorassembleia.repository;
 
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
-import org.springframework.stereotype.Component;
+import org.springframework.data.repository.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
-@Component
-public class AgendaRepository {
+public interface AgendaRepository extends Repository<Agenda, Integer> {
 
-    private final List<Agenda> agendaRepository = new ArrayList<>();
+    Agenda save(Agenda agenda);
 
-    public Agenda save(Agenda agenda) {
-        agendaRepository.add(agenda);
-        return agenda;
-    }
-
-    public Agenda findById(String agendaId) {
-        for (Agenda a : agendaRepository) {
-            if (a.getId().equals(agendaId)) {
-                return a;
-            }
-        }
-        return null;
-    }
+    Optional<Agenda> findById(Integer agendaId);
 
 }
