@@ -63,7 +63,7 @@ public class RegisterVoteServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenVotingSessionNotFound() {
-        User user = new User("mockUserName");
+        User user = new User();
 
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, null);
 
@@ -87,12 +87,13 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenVotingSessionStatusIsNull() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionYes);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
         VotingSession votingSession = new VotingSession();
 
-        Vote vote = new Vote(user, votingSession);
-
+        Vote vote = new Vote();
+        vote.setUser(user);
+        vote.setVotingSession(votingSession);
 
         when(userRepository.findById(mockUserId))
                 .thenReturn(Optional.of(user));
@@ -119,12 +120,14 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenVotingSessionStatusIsntOpen() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionYes);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
         VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.closed);
 
-        Vote vote = new Vote(user, votingSession);
+        Vote vote = new Vote();
+        vote.setUser(user);
+        vote.setVotingSession(votingSession);
 
         when(userRepository.findById(mockUserId))
                 .thenReturn(Optional.of(user));
@@ -151,12 +154,12 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenVotingOptionIsNull() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, null);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
         VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
-        Vote vote = new Vote(user, votingSession);
+        Vote vote = new Vote();
 
         when(userRepository.findById(mockUserId))
                 .thenReturn(Optional.of(user));
@@ -184,12 +187,12 @@ public class RegisterVoteServiceTest {
         String invalidVotingOption = "mockInvalidVotingOption";
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, invalidVotingOption);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
         VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
-        Vote vote = new Vote(user, votingSession);
+        Vote vote = new Vote();
 
         when(userRepository.findById(mockUserId))
                 .thenReturn(Optional.of(user));
@@ -216,12 +219,12 @@ public class RegisterVoteServiceTest {
     public void shouldThrowExceptionWhenUserAlreadyVoted() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, null);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
         VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
-        Vote vote = new Vote(user, votingSession);
+        Vote vote = new Vote();
         vote.setVote(VotingOption.yes);
 
         when(userRepository.findById(mockUserId))
@@ -249,7 +252,7 @@ public class RegisterVoteServiceTest {
     public void shouldRegisterVoteWhenValidRequestAndVoteYesAndValidVotingSessionAndValidUser() {
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionYes);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
         VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
@@ -279,7 +282,7 @@ public class RegisterVoteServiceTest {
         String validVotingOptionNo = "no";
         VoteRequest voteRequest = new VoteRequest(mockUserId, mockVotingSessionId, validVotingOptionNo);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
         VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);

@@ -11,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.modelmapper.ModelMapper;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -30,10 +29,7 @@ public class CreateAgendaServiceTest {
 
     @Mock
     private AgendaValidator agendaValidator;
-
-    @Mock
-    private ModelMapper modelMapper;
-
+    
     private final String userId = "mockUserId";
     private final String mockSubject = "mockSubject";
 

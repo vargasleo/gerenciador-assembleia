@@ -37,7 +37,7 @@ public class RegisterVoteService {
                 .orElseThrow(() -> new NotFoundException("voting.session.not.found"));
 
         Vote vote = voteRepository.findByUserIdAndVotingSessionId(voteRequest.getUserId(), voteRequest.getVotingSessionId())
-                .orElse(new Vote(user, votingSession));
+                .orElseGet(() -> this.createNewVote(user, votingSession));
 
         if (this.isVoteAlreadyRegistered(vote)) {
             throw new BusinessException("user.already.voted.in.this.session");
@@ -50,6 +50,13 @@ public class RegisterVoteService {
         this.registerVote(vote, votingOption);
 
         voteRepository.save(vote);
+        return vote;
+    }
+
+    private Vote createNewVote(User user, VotingSession votingSession) {
+        Vote vote = new Vote();
+        vote.setUser(user);
+        vote.setVotingSession(votingSession);
         return vote;
     }
 

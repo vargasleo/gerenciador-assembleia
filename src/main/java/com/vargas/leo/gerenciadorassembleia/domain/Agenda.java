@@ -1,9 +1,7 @@
 package com.vargas.leo.gerenciadorassembleia.domain;
 
 import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,8 +12,6 @@ import javax.persistence.*;
 @Table(name = "agenda")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Agenda {
 
     @Id

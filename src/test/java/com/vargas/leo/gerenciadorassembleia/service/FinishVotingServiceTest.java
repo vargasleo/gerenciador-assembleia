@@ -62,7 +62,7 @@ public class FinishVotingServiceTest {
     public void shouldThrowExceptionWhenVotingSessionNotFound() {
         FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
 
-        User user = new User("mockUserName");
+        User user = new User();
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.empty());
@@ -84,7 +84,7 @@ public class FinishVotingServiceTest {
     public void shouldThrowExceptionWhenVotingSessionStatusIsInvalid() {
         FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
 
-        User user = new User("mockUserName");
+        User user = new User();
         Agenda agenda = new Agenda();
 
         VotingSession votingSession = new VotingSession();
@@ -110,7 +110,7 @@ public class FinishVotingServiceTest {
     public void shouldDefineYesAsWinner() {
         FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
 
-        User user = new User("mockUserName");
+        User user = new User();
         Agenda agenda = new Agenda();
 
         VotingSession votingSession = new VotingSession();
@@ -138,7 +138,7 @@ public class FinishVotingServiceTest {
     public void shouldDefineNoAsWinner() {
         FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
 
-        User user = new User("mockUserName");
+        User user = new User();
         Agenda agenda = new Agenda();
 
         VotingSession votingSession = new VotingSession();
@@ -166,7 +166,7 @@ public class FinishVotingServiceTest {
     public void shouldDefineResultAsDraw() {
         FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
 
-        User user = new User("mockUserName");
+        User user = new User();
         Agenda agenda = new Agenda();
 
         VotingSession votingSession = new VotingSession();

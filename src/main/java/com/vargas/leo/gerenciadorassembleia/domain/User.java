@@ -1,17 +1,14 @@
 package com.vargas.leo.gerenciadorassembleia.domain;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Getter
 @Setter
-@RequiredArgsConstructor
 public class User {
 
     @Id
@@ -21,6 +18,6 @@ public class User {
     private String id;
 
     @Column(name = "name")
-    private final String name;
+    private String name;
 
 }
