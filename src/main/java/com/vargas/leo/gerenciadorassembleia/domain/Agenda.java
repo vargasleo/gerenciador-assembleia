@@ -27,7 +27,7 @@ public class Agenda {
     @Column(name = "subject")
     private String subject;
 
-    @OneToOne(mappedBy = "voting-session")
+    @OneToOne(mappedBy = "agenda")
     private VotingSession votingSession;
 
     @Column(name = "status")
