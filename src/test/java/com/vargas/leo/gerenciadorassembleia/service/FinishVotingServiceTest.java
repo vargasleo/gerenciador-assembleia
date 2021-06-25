@@ -87,8 +87,8 @@ public class FinishVotingServiceTest {
         User user = new User("mockUserName");
         Agenda agenda = new Agenda();
 
-        VotingSession votingSession = new VotingSession(agenda);
-
+        VotingSession votingSession = new VotingSession();
+        votingSession.setAgenda(agenda);
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
         doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
@@ -113,7 +113,8 @@ public class FinishVotingServiceTest {
         User user = new User("mockUserName");
         Agenda agenda = new Agenda();
 
-        VotingSession votingSession = new VotingSession(agenda);
+        VotingSession votingSession = new VotingSession();
+        votingSession.setAgenda(agenda);
         votingSession.setYesVotes(1);
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
@@ -140,7 +141,8 @@ public class FinishVotingServiceTest {
         User user = new User("mockUserName");
         Agenda agenda = new Agenda();
 
-        VotingSession votingSession = new VotingSession(agenda);
+        VotingSession votingSession = new VotingSession();
+        votingSession.setAgenda(agenda);
         votingSession.setNoVotes(1);
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
@@ -167,7 +169,8 @@ public class FinishVotingServiceTest {
         User user = new User("mockUserName");
         Agenda agenda = new Agenda();
 
-        VotingSession votingSession = new VotingSession(agenda);
+        VotingSession votingSession = new VotingSession();
+        votingSession.setAgenda(agenda);
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));

@@ -89,7 +89,7 @@ public class RegisterVoteServiceTest {
 
         User user = new User("mockUserName");
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
 
         Vote vote = new Vote(user, votingSession);
 
@@ -121,7 +121,7 @@ public class RegisterVoteServiceTest {
 
         User user = new User("mockUserName");
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.closed);
 
         Vote vote = new Vote(user, votingSession);
@@ -153,7 +153,7 @@ public class RegisterVoteServiceTest {
 
         User user = new User("mockUserName");
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
         Vote vote = new Vote(user, votingSession);
@@ -186,7 +186,7 @@ public class RegisterVoteServiceTest {
 
         User user = new User("mockUserName");
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
         Vote vote = new Vote(user, votingSession);
@@ -218,7 +218,7 @@ public class RegisterVoteServiceTest {
 
         User user = new User("mockUserName");
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
         Vote vote = new Vote(user, votingSession);
@@ -251,7 +251,7 @@ public class RegisterVoteServiceTest {
 
         User user = new User("mockUserName");
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
         when(userRepository.findById(mockUserId))
@@ -281,7 +281,7 @@ public class RegisterVoteServiceTest {
 
         User user = new User("mockUserName");
 
-        VotingSession votingSession = new VotingSession(null);
+        VotingSession votingSession = new VotingSession();
         votingSession.setStatus(VotingSessionStatus.opened);
 
         when(userRepository.findById(mockUserId))
