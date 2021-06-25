@@ -124,7 +124,7 @@ public class FinishVotingServiceTest {
 
         assertEquals(AgendaStatus.closed, result.getAgenda().getStatus());
         assertEquals(VotingSessionStatus.closed, result.getStatus());
-        assertEquals(VotingResult.yes, result.getWinnerOption());
+        assertEquals(VotingResult.yes, result.getResult());
         assertEquals(VotingResult.no, result.getLooserOption());
 
         verify(userRepository).findById(mockUserId);
@@ -152,7 +152,7 @@ public class FinishVotingServiceTest {
 
         assertEquals(AgendaStatus.closed, result.getAgenda().getStatus());
         assertEquals(VotingSessionStatus.closed, result.getStatus());
-        assertEquals(VotingResult.no, result.getWinnerOption());
+        assertEquals(VotingResult.no, result.getResult());
         assertEquals(VotingResult.yes, result.getLooserOption());
 
         verify(userRepository).findById(mockUserId);
@@ -179,7 +179,7 @@ public class FinishVotingServiceTest {
 
         assertEquals(AgendaStatus.closed, result.getAgenda().getStatus());
         assertEquals(VotingSessionStatus.closed, result.getStatus());
-        assertEquals(VotingResult.draw, result.getWinnerOption());
+        assertEquals(VotingResult.draw, result.getResult());
         assertEquals(VotingResult.draw, result.getLooserOption());
 
         verify(userRepository).findById(mockUserId);

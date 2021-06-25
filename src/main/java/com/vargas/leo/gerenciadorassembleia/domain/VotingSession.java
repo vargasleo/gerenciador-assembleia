@@ -40,7 +40,9 @@ public class VotingSession {
     private LocalDateTime finalDateTime = DEFAULT_FINAL_DATE_TIME;
 
     @Enumerated(value = EnumType.STRING)
-    private VotingResult winnerOption;
+
+    @Column(name = "result")
+    private VotingResult result;
 
     @Transient
     private VotingResult looserOption;

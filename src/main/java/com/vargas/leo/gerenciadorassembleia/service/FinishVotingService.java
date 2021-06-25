@@ -27,7 +27,7 @@ public class FinishVotingService {
         VotingSession votingSession = this.finishVotingAndCountVotes(finishVotingRequest);
         return new FinishVotingResponse(
                 LocalDateTime.now(),
-                votingSession.getWinnerOption(),
+                votingSession.getResult(),
                 votingSession.getLooserOption(),
                 votingSession.getYesVotes(),
                 votingSession.getNoVotes()
@@ -62,13 +62,13 @@ public class FinishVotingService {
 
     private void defineVotingSessionResult(VotingSession votingSession) {
         if (votingSession.getYesVotes() > votingSession.getNoVotes()) {
-            votingSession.setWinnerOption(VotingResult.yes);
+            votingSession.setResult(VotingResult.yes);
             votingSession.setLooserOption(VotingResult.no);
         } else if (votingSession.getNoVotes() > votingSession.getYesVotes()) {
-            votingSession.setWinnerOption(VotingResult.no);
+            votingSession.setResult(VotingResult.no);
             votingSession.setLooserOption(VotingResult.yes);
         } else {
-            votingSession.setWinnerOption(VotingResult.draw);
+            votingSession.setResult(VotingResult.draw);
             votingSession.setLooserOption(VotingResult.draw);
         }
     }

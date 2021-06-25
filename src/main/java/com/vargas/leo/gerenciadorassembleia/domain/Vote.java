@@ -21,12 +21,12 @@ public class Vote {
     @GenericGenerator(name = "increment", strategy = "increment")
     private String id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id_user")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_user")
     private final User user;
 
-    @ManyToOne
-    @JoinColumn(name = "id_voting_session", referencedColumnName = "id_voting_session")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_voting_session")
     private final VotingSession votingSession;
 
     @Column(name = "created_at")
