@@ -17,6 +17,7 @@ public class User {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
+    @Column(name = "id_user")
     private String id;
 
     @Column(name = "name")

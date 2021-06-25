@@ -24,13 +24,14 @@ public class VotingSession {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
+    @Column(name = "id_voting_session")
     private String id;
 
     @Column(name = "created_at")
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_agenda")
+    @JoinColumn(name = "agenda_id", referencedColumnName = "agenda_id")
     private Agenda Agenda;
 
     @Column(name = "ended_at")

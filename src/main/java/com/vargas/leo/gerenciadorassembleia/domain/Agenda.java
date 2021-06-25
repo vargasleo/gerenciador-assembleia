@@ -21,12 +21,13 @@ public class Agenda {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
+    @Column(name = "id_agenda")
     private String id;
 
     @Column(name = "subject")
     private String subject;
 
-    @OneToOne(mappedBy = "voting_session")
+    @OneToOne(mappedBy = "voting-session")
     private VotingSession votingSession;
 
     @Column(name = "status")
