@@ -38,11 +38,11 @@ public class CreatingVotingSessionServiceTest {
     @Mock
     private VotingSessionValidator votingSessionValidator;
 
-    private final String agendaId = "mockAgendaId";
+    private final Integer agendaId = 1;
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenInvalidAgendaId() {
-        CreateVotingSessionRequest request = new CreateVotingSessionRequest(null, null);
+        CreateVotingSessionRequest request = new CreateVotingSessionRequest();
 
         when(agendaRepository.findById(null)).thenReturn(Optional.empty());
 
@@ -57,7 +57,9 @@ public class CreatingVotingSessionServiceTest {
 
     @Test(expected = BusinessException.class)
     public void shouldThrowExceptionWhenAgendaAlreadyHasVotingSession() {
-        CreateVotingSessionRequest request = new CreateVotingSessionRequest(agendaId, null);
+        CreateVotingSessionRequest request = new CreateVotingSessionRequest();
+        request.setAgendaId(agendaId);
+
         Agenda agenda = new Agenda();
 
         when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
@@ -79,6 +81,8 @@ public class CreatingVotingSessionServiceTest {
         LocalDateTime validTimeLimit = LocalDateTime.now();
 
         CreateVotingSessionRequest request = new CreateVotingSessionRequest(agendaId, validTimeLimit);
+
+
         Agenda agenda = new Agenda();
         agenda.setStatus(AgendaStatus.created);
 

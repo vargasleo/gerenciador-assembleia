@@ -23,7 +23,7 @@ public class VotingSession {
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id_voting_session")
-    private String id;
+    private Integer id;
 
     @Column(name = "created_at")
     private final LocalDateTime createdAt = LocalDateTime.now();

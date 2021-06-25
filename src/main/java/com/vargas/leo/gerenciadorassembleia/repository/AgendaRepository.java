@@ -9,6 +9,6 @@ public interface AgendaRepository extends Repository<Agenda, Integer> {
 
     Agenda save(Agenda agenda);
 
-    Optional<Agenda> findById(String agendaId);
+    Optional<Agenda> findById(Integer agendaId);
 
 }

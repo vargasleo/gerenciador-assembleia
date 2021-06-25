@@ -39,13 +39,14 @@ public class RegisterVoteServiceTest {
     @Mock
     private VotingSessionValidator votingSessionValidator;
 
-    private final String mockUserId = "mockUserId";
-    private final String mockVotingSessionId = "mockVotingSessionId";
+    private final Integer mockUserId = 1;
+    private final Integer mockVotingSessionId = 1;
     private final String validVotingOptionYes = "yes";
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenUserNotFound() {
-        VoteRequest voteRequest = new VoteRequest(mockUserId, null, null);
+        VoteRequest voteRequest = new VoteRequest();
+        voteRequest.setUserId(mockUserId);
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.empty());
 

@@ -11,6 +11,6 @@ public class CreateAgendaResponse {
 
     private String subject;
     private AgendaStatus status;
-    private String id;
+    private Integer id;
 
 }

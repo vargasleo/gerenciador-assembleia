@@ -18,7 +18,7 @@ public class Vote {
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id_vote")
-    private String id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user", referencedColumnName = "id_user")

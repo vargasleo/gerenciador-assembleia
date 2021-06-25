@@ -9,6 +9,6 @@ public interface VoteRepository extends Repository<Vote, Integer> {
 
     Vote save(Vote agenda);
 
-    Optional<Vote> findByUserIdAndVotingSessionId(String userId, String votingSession);
+    Optional<Vote> findByUserIdAndVotingSessionId(Integer userId, Integer votingSession);
 
 }

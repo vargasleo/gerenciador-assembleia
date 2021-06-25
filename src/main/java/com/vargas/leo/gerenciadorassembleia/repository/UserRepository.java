@@ -9,6 +9,6 @@ public interface UserRepository extends Repository<User, Integer> {
 
     User save(User user);
 
-    Optional<User> findById(String userId);
+    Optional<User> findById(Integer userId);
 
 }

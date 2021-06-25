@@ -30,12 +30,13 @@ public class CreateAgendaServiceTest {
     @Mock
     private AgendaValidator agendaValidator;
     
-    private final String userId = "mockUserId";
+    private final Integer userId = 1;
     private final String mockSubject = "mockSubject";
 
     @Test(expected = BusinessException.class)
     public void shouldNotCreateAgendaWhenHasNoSubject() {
-        CreateAgendaRequest request = new CreateAgendaRequest(userId, null);
+        CreateAgendaRequest request = new CreateAgendaRequest();
+        request.setUserId(userId);
 
         doThrow(new BusinessException(agendaValidator.INVALID_SUBJECT))
                 .when(agendaValidator).validateAgendaSubject(null);
