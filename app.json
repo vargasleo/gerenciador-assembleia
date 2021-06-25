@@ -1,7 +1,0 @@
-{
-  "name": "gerenciador-assembleia",
-  "description": "gerenciador-assembleia",
-  "repository": " https://git.heroku.com/gerenciador-assembleia.git",
-  "image": "heroku/java",
-  "addons": [ "heroku-postgresql" ]
-}

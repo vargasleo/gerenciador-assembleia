@@ -27,7 +27,7 @@ public class Agenda {
     @Column(name = "subject")
     private String subject;
 
-    @OneToOne(mappedBy = "agenda")
+    @OneToOne(mappedBy="agenda", cascade = CascadeType.ALL)
     private VotingSession votingSession;
 
     @Column(name = "status")
