@@ -1,12 +1,13 @@
 package com.vargas.leo.gerenciadorassembleia.service;
 
+import com.vargas.leo.gerenciadorassembleia.controller.request.FinishVotingRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.request.VoteRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.VoteResponse;
-import com.vargas.leo.gerenciadorassembleia.domain.*;
-import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.User;
+import com.vargas.leo.gerenciadorassembleia.domain.Vote;
+import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingPower;
-import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
@@ -27,6 +28,7 @@ public class RegisterVoteService {
     private final VotingSessionRepository votingSessionRepository;
     private final VotingSessionValidator votingSessionValidator;
     private final CpfValidationService cpfValidationService;
+    private final FinishVotingService finishVotingService;
 
     public VoteResponse registerVote(VoteRequest voteRequest) {
         Vote vote = this.register(voteRequest);
@@ -54,9 +56,13 @@ public class RegisterVoteService {
         votingSessionValidator.validateVotingSessionStatus(vote.getVotingSession());
 
         if (votingSessionValidator.isNotValidDeadline(votingSession.getDeadline())) {
-            votingSession.setStatus(VotingSessionStatus.close);
-            votingSession.getAgenda().setStatus(AgendaStatus.closed);
-            votingSessionRepository.save(votingSession);
+            FinishVotingRequest finishVotingRequest = FinishVotingRequest.builder()
+                    .userId(user.getId())
+                    .votingSessionId(votingSession.getId())
+                    .build();
+
+            finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
+
             throw new BusinessException("voting.session.reached.deadline");
         }
 

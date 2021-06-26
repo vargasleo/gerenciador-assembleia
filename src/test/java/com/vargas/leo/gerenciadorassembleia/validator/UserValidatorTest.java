@@ -24,7 +24,7 @@ public class UserValidatorTest {
         try {
             userValidator.validateUserId(null);
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER_ID, e.getMessage());
+            assertEquals(UserValidator.INVALID_USER_ID, e.getMessage());
             throw e;
         }
     }
@@ -34,7 +34,7 @@ public class UserValidatorTest {
         try {
             userValidator.validateUserName(null);
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER_NAME, e.getMessage());
+            assertEquals(UserValidator.INVALID_USER_NAME, e.getMessage());
             throw e;
         }
     }
@@ -44,7 +44,7 @@ public class UserValidatorTest {
         try {
             userValidator.validateUserName("");
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER_NAME, e.getMessage());
+            assertEquals(UserValidator.INVALID_USER_NAME, e.getMessage());
             throw e;
         }
     }
@@ -58,7 +58,7 @@ public class UserValidatorTest {
         try {
             userValidator.validateCpf(null);
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER_CPF, e.getMessage());
+            assertEquals(UserValidator.INVALID_USER_CPF, e.getMessage());
             throw e;
         }
     }
@@ -68,7 +68,7 @@ public class UserValidatorTest {
         try {
             userValidator.validateCpf("");
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER_CPF, e.getMessage());
+            assertEquals(UserValidator.INVALID_USER_CPF, e.getMessage());
             throw e;
         }
     }
@@ -78,7 +78,7 @@ public class UserValidatorTest {
         try {
             userValidator.validateCpf("123");
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER_CPF, e.getMessage());
+            assertEquals(UserValidator.INVALID_USER_CPF, e.getMessage());
             throw e;
         }
     }

@@ -89,7 +89,7 @@ public class CreatingVotingSessionServiceTest {
                 .build();
 
         when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.isNotValidDeadline(validTimeLimit)).thenReturn(true);
+        when(votingSessionValidator.isValidRequestDeadline(validTimeLimit)).thenReturn(true);
 
         VotingSession result = createVotingSessionService.create(request);
 
@@ -98,7 +98,7 @@ public class CreatingVotingSessionServiceTest {
 
         verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).isNotValidDeadline(validTimeLimit);
+        verify(votingSessionValidator).isValidRequestDeadline(validTimeLimit);
         verify(votingSessionRepository).save(result);
     }
 
@@ -112,7 +112,7 @@ public class CreatingVotingSessionServiceTest {
                 .build();
 
         when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.isNotValidDeadline(null)).thenReturn(false);
+        when(votingSessionValidator.isValidRequestDeadline(null)).thenReturn(false);
 
         VotingSession result = createVotingSessionService.create(request);
 
@@ -121,12 +121,12 @@ public class CreatingVotingSessionServiceTest {
 
         verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).isNotValidDeadline(null);
+        verify(votingSessionValidator).isValidRequestDeadline(null);
         verify(votingSessionRepository).save(result);
     }
 
     @Test
-    public void shouldntSetTimeLimitWhenExistsAndIsInvalid() {
+    public void shouldNotSetTimeLimitWhenExistsAndIsInvalid() {
         LocalDateTime invalidFinalDateTime = LocalDateTime.of(LocalDate.of(1999,1,1), LocalTime.now());
 
         CreateVotingSessionRequest request = new CreateVotingSessionRequest();
@@ -138,7 +138,7 @@ public class CreatingVotingSessionServiceTest {
                 .build();
 
         when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.isNotValidDeadline(invalidFinalDateTime)).thenReturn(false);
+        when(votingSessionValidator.isValidRequestDeadline(invalidFinalDateTime)).thenReturn(false);
 
         VotingSession result = createVotingSessionService.create(request);
 
@@ -147,7 +147,7 @@ public class CreatingVotingSessionServiceTest {
 
         verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).isNotValidDeadline(invalidFinalDateTime);
+        verify(votingSessionValidator).isValidRequestDeadline(invalidFinalDateTime);
         verify(votingSessionRepository).save(result);
     }
 

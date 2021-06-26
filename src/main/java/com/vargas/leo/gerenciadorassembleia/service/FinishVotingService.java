@@ -62,7 +62,7 @@ public class FinishVotingService {
     }
 
     private void closeVotingSession(VotingSession votingSession) {
-        votingSession.setStatus(VotingSessionStatus.close);
+        votingSession.setStatus(VotingSessionStatus.closed);
 
         this.closeAgenda(votingSession.getAgenda());
     }
