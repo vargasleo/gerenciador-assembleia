@@ -15,7 +15,7 @@ public class VotingSessionValidator {
         if (Objects.isNull(votingSession.getStatus())) {
             throw new BusinessException("null.voting.session.status");
         }
-        if (VotingSessionStatus.close.equals(votingSession.getStatus())) {
+        if (VotingSessionStatus.closed.equals(votingSession.getStatus())) {
             throw new BusinessException("voting.session.already.closed");
         }
     }

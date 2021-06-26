@@ -21,7 +21,7 @@ import java.time.LocalTime;
 @Table(name = "voting_session")
 public class VotingSession {
 
-    public static final LocalDateTime DEFAULT_FINAL_DATE_TIME = LocalDate.now().atTime(LocalTime.now()).plusMinutes(3);
+    public static final LocalDateTime DEFAULT_FINAL_DATE_TIME = LocalDate.now().atTime(LocalTime.now()).plusMinutes(1);
 
     @Id
     @GeneratedValue(generator = "increment")

@@ -5,9 +5,7 @@ import com.vargas.leo.gerenciadorassembleia.domain.User;
 import com.vargas.leo.gerenciadorassembleia.domain.Vote;
 import com.vargas.leo.gerenciadorassembleia.domain.VotingPowerDTO;
 import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
-import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
-import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingPower;
-import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.*;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
@@ -144,7 +142,7 @@ public class RegisterVoteServiceTest {
         User user = User.builder().build();
 
         VotingSession votingSession = VotingSession.builder()
-                .status(VotingSessionStatus.close)
+                .status(VotingSessionStatus.closed)
                 .build();
 
         Vote vote = Vote.builder()
@@ -424,6 +422,8 @@ public class RegisterVoteServiceTest {
             registerVoteService.register(request);
         } catch (BusinessException e) {
             assertEquals("voting.session.reached.deadline", e.getMessage());
+            assertEquals(AgendaStatus.closed, votingSession.getAgenda().getStatus());
+            assertEquals(VotingSessionStatus.closed, votingSession.getStatus());
 
             verify(userRepository).findById(mockUserId);
             verify(votingSessionValidator).isNotValidDeadline(votingSession.getDeadline());
