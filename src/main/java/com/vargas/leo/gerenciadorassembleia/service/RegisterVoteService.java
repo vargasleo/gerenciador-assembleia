@@ -4,6 +4,7 @@ import com.vargas.leo.gerenciadorassembleia.controller.request.VoteRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.VoteResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.*;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingPower;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
@@ -23,9 +24,11 @@ public class RegisterVoteService {
     private final UserRepository userRepository;
     private final VotingSessionRepository votingSessionRepository;
     private final VotingSessionValidator votingSessionValidator;
+    private final CpfValidationService cpfValidationService;
 
     public VoteResponse registerVote(VoteRequest voteRequest) {
         Vote vote = this.register(voteRequest);
+
         return VoteResponse.builder()
                 .votingOption(vote.getVote())
                 .votedAt(vote.getVotedAt())
@@ -50,10 +53,18 @@ public class RegisterVoteService {
 
         votingSessionValidator.validateVotingSessionStatus(vote.getVotingSession());
 
+        if (!this.isUserAbleToVote(user.getCpf())) {
+           throw new BusinessException("cpf.is.unable.to.vote");
+        }
+
         this.registerVote(vote, votingOption);
 
         voteRepository.save(vote);
         return vote;
+    }
+
+    private boolean isUserAbleToVote(String cpf) {
+        return VotingPower.ABLE_TO_VOTE.equals(cpfValidationService.isAllowedToVote(cpf).getStatus());
     }
 
     private Vote createNewVote(User user, VotingSession votingSession) {

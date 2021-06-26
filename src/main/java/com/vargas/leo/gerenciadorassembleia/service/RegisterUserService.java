@@ -19,12 +19,14 @@ public class RegisterUserService {
         return CreateUserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())
+                .cpf(user.getCpf())
                 .build();
     }
 
     protected User create(CreateUserRequest createUserRequest) {
         User user =  User.builder()
                 .name(createUserRequest.getName())
+                .cpf(createUserRequest.getCpf())
                 .build();
 
         userRepository.save(user);
