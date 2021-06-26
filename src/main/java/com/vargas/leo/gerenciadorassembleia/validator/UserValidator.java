@@ -7,9 +7,9 @@ import org.springframework.util.StringUtils;
 @Component
 public class UserValidator {
 
-    public final String INVALID_USER_ID = "invalid.user.id";
-    public final String INVALID_USER_NAME = "invalid.user.name";
-    public final String INVALID_USER_CPF = "invalid.user.cpf";
+    public static final String INVALID_USER_ID = "invalid.user.id";
+    public static final String INVALID_USER_NAME = "invalid.user.name";
+    public static final String INVALID_USER_CPF = "invalid.user.cpf";
 
     public void validateUserRegister(String name, String cpf) {
         this.validateUserName(name);
