@@ -7,6 +7,7 @@ import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingResult;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
+import com.vargas.leo.gerenciadorassembleia.messaging.PublisherService;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
@@ -22,16 +23,23 @@ public class FinishVotingService {
     private final UserRepository userRepository;
     private final VotingSessionRepository votingSessionRepository;
     private final VotingSessionValidator votingSessionValidator;
+    private final PublisherService publisherService;
 
     public FinishVotingResponse finishVoting(FinishVotingRequest finishVotingRequest) {
         VotingSession votingSession = this.finishVotingAndCountVotes(finishVotingRequest);
 
-        return FinishVotingResponse.builder()
+        FinishVotingResponse response = FinishVotingResponse.builder()
                 .endedAt(LocalDateTime.now())
                 .winnerOption(votingSession.getResult())
                 .noVotes(votingSession.getNoVotes())
                 .yesVotes(votingSession.getYesVotes())
+                .id(votingSession.getId())
+                .agendaSubject(votingSession.getAgenda().getSubject())
                 .build();
+
+        publisherService.insertOnQueue(response);
+
+        return response;
     }
 
     protected VotingSession finishVotingAndCountVotes(FinishVotingRequest finishVotingRequest) {
