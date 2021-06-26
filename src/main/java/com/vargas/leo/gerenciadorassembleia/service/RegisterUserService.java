@@ -15,13 +15,21 @@ public class RegisterUserService {
 
     public CreateUserResponse createUser(CreateUserRequest createUserRequest) {
         User user = this.create(createUserRequest);
-        return new CreateUserResponse(user.getId(), user.getName());
+
+        return CreateUserResponse.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .build();
     }
 
     protected User create(CreateUserRequest createUserRequest) {
-        User user = new User();
-        user.setName(createUserRequest.getName());
-        return userRepository.save(user);
+        User user =  User.builder()
+                .name(createUserRequest.getName())
+                .build();
+
+        userRepository.save(user);
+
+        return user;
     }
 
 }

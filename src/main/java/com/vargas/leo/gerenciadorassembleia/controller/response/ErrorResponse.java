@@ -1,10 +1,10 @@
 package com.vargas.leo.gerenciadorassembleia.controller.response;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
+@Builder
 public class ErrorResponse {
 
     private String message;

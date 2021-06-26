@@ -2,8 +2,10 @@ package com.vargas.leo.gerenciadorassembleia.domain;
 
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingResult;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,10 +13,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Builder
+@Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "voting_session")
-@Getter
-@Setter
 public class VotingSession {
 
     public static final LocalDateTime DEFAULT_FINAL_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 3, 0));
@@ -36,7 +40,7 @@ public class VotingSession {
     private LocalDateTime endedAt;
 
     @Column(name = "deadline")
-    private LocalDateTime finalDateTime = DEFAULT_FINAL_DATE_TIME;
+    private LocalDateTime finalDateTime;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "result")

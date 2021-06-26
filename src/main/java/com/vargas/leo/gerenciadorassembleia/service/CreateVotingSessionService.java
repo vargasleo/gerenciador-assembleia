@@ -3,8 +3,8 @@ package com.vargas.leo.gerenciadorassembleia.service;
 import com.vargas.leo.gerenciadorassembleia.controller.request.CreateVotingSessionRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.CreateVotingSessionResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
-import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
@@ -12,13 +12,10 @@ import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateVotingSessionService {
@@ -26,10 +23,15 @@ public class CreateVotingSessionService {
     private final VotingSessionRepository votingSessionRepository;
     private final AgendaRepository agendaRepository;
     private final VotingSessionValidator votingSessionValidator;
-    private final ModelMapper mapper;
 
     public CreateVotingSessionResponse createVotingSession(CreateVotingSessionRequest votingSessionRequest) {
-        return mapper.map(this.create(votingSessionRequest), CreateVotingSessionResponse.class);
+        VotingSession votingSession = this.create(votingSessionRequest);
+
+        return CreateVotingSessionResponse.builder()
+                .id(votingSession.getId())
+                .createdAt(votingSession.getCreatedAt())
+                .finalDateTime(votingSession.getFinalDateTime())
+                .build();
     }
 
     protected VotingSession create(CreateVotingSessionRequest votingSessionRequest) {
@@ -37,13 +39,19 @@ public class CreateVotingSessionService {
                 .orElseThrow(() -> new NotFoundException("agenda.not.found"));
 
         this.validateAgendaStatus(agenda);
+
         agendaRepository.save(agenda);
 
-        VotingSession votingSession = new VotingSession();
-        votingSession.setAgenda(agenda);
+        VotingSession votingSession = VotingSession.builder()
+                .agenda(agenda)
+                .build();
+
         this.adjustVotingSessionTimeLimit(votingSession, votingSessionRequest.getFinalDateTime());
-        votingSession.setStatus(VotingSessionStatus.opened);
+
+        votingSession.setStatus(VotingSessionStatus.open);
+
         votingSessionRepository.save(votingSession);
+
         return votingSession;
     }
 
@@ -56,11 +64,12 @@ public class CreateVotingSessionService {
     }
 
     private void adjustVotingSessionTimeLimit(VotingSession votingSession, LocalDateTime finalTimeLimit) {
-        boolean validRequestTimeLimit = votingSessionValidator.validateFinalDateTime(finalTimeLimit);
+        boolean validRequestTimeLimit = votingSessionValidator.isValidDeadline(finalTimeLimit);
+
         if (validRequestTimeLimit) {
             votingSession.setFinalDateTime(finalTimeLimit);
         } else {
-            log.info("request.invalid.time.limit.for.voting.session");
+            votingSession.setFinalDateTime(VotingSession.DEFAULT_FINAL_DATE_TIME);
         }
     }
 

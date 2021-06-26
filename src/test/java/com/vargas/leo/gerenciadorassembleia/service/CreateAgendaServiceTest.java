@@ -57,7 +57,9 @@ public class CreateAgendaServiceTest {
 
     @Test(expected = BusinessException.class)
     public void shouldNotCreateAgendaWhenInvalidUser() {
-        CreateAgendaRequest request = new CreateAgendaRequest(userId, mockSubject);
+        CreateAgendaRequest request = new CreateAgendaRequest();
+        request.setUserId(userId);
+        request.setSubject(mockSubject);
 
         doThrow(new BusinessException(userValidator.INVALID_USER))
                 .when(userValidator).validateUserId(userId);
@@ -78,7 +80,9 @@ public class CreateAgendaServiceTest {
 
     @Test
     public void shouldCreateAgendaWhenValidUserAndValidSubject() {
-        CreateAgendaRequest request = new CreateAgendaRequest(userId, mockSubject);
+        CreateAgendaRequest request = new CreateAgendaRequest();
+        request.setUserId(userId);
+        request.setSubject(mockSubject);
 
         Agenda result = createAgendaService.create(request);
 

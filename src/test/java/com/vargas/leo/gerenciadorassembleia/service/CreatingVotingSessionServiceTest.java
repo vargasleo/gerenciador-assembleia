@@ -38,7 +38,7 @@ public class CreatingVotingSessionServiceTest {
     @Mock
     private VotingSessionValidator votingSessionValidator;
 
-    private final Integer agendaId = 1;
+    private final Integer mockAgendaId = 1;
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenInvalidAgendaId() {
@@ -58,18 +58,18 @@ public class CreatingVotingSessionServiceTest {
     @Test(expected = BusinessException.class)
     public void shouldThrowExceptionWhenAgendaAlreadyHasVotingSession() {
         CreateVotingSessionRequest request = new CreateVotingSessionRequest();
-        request.setAgendaId(agendaId);
+        request.setAgendaId(mockAgendaId);
 
-        Agenda agenda = new Agenda();
+        Agenda agenda = Agenda.builder().build();
 
-        when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
+        when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
 
         try {
             createVotingSessionService.create(request);
         } catch (BusinessException e) {
             assertEquals("agenda.already.has.voting.session", e.getMessage());
 
-            verify(agendaRepository).findById(agendaId);
+            verify(agendaRepository).findById(mockAgendaId);
             verify(agendaRepository, never()).save(agenda);
 
             throw e;
@@ -80,43 +80,48 @@ public class CreatingVotingSessionServiceTest {
     public void shouldSetTimeLimitCorrectlyWhenExistsAndIsValid() {
         LocalDateTime validTimeLimit = LocalDateTime.now();
 
-        CreateVotingSessionRequest request = new CreateVotingSessionRequest(agendaId, validTimeLimit);
+        CreateVotingSessionRequest request = new CreateVotingSessionRequest();
+        request.setAgendaId(mockAgendaId);
+        request.setFinalDateTime(validTimeLimit);
 
+        Agenda agenda = Agenda.builder()
+                .status(AgendaStatus.created)
+                .build();
 
-        Agenda agenda = new Agenda();
-        agenda.setStatus(AgendaStatus.created);
-
-        when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.validateFinalDateTime(validTimeLimit)).thenReturn(true);
+        when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
+        when(votingSessionValidator.isValidDeadline(validTimeLimit)).thenReturn(true);
 
         VotingSession result = createVotingSessionService.create(request);
 
         assertEquals(AgendaStatus.open, result.getAgenda().getStatus());
         assertEquals(validTimeLimit, result.getFinalDateTime());
 
-        verify(agendaRepository).findById(agendaId);
+        verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).validateFinalDateTime(validTimeLimit);
+        verify(votingSessionValidator).isValidDeadline(validTimeLimit);
         verify(votingSessionRepository).save(result);
     }
 
     @Test
     public void shouldntSetTimeLimitWhenDoesntExists() {
-        CreateVotingSessionRequest request = new CreateVotingSessionRequest(agendaId, null);
-        Agenda agenda = new Agenda();
-        agenda.setStatus(AgendaStatus.created);
+        CreateVotingSessionRequest request = new CreateVotingSessionRequest();
+        request.setAgendaId(mockAgendaId);
 
-        when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.validateFinalDateTime(null)).thenReturn(false);
+        Agenda agenda = Agenda.builder()
+                .status(AgendaStatus.created)
+                .build();
+
+        when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
+        when(votingSessionValidator.isValidDeadline(null)).thenReturn(false);
 
         VotingSession result = createVotingSessionService.create(request);
 
         assertEquals(AgendaStatus.open, result.getAgenda().getStatus());
         assertEquals(VotingSession.DEFAULT_FINAL_DATE_TIME, result.getFinalDateTime());
 
-        verify(agendaRepository).findById(agendaId);
+        verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).validateFinalDateTime(null);
+        verify(votingSessionValidator).isValidDeadline(null);
         verify(votingSessionRepository).save(result);
     }
 
@@ -124,21 +129,25 @@ public class CreatingVotingSessionServiceTest {
     public void shouldntSetTimeLimitWhenExistsAndIsInvalid() {
         LocalDateTime invalidFinalDateTime = LocalDateTime.of(LocalDate.of(1999,1,1), LocalTime.now());
 
-        CreateVotingSessionRequest request = new CreateVotingSessionRequest(agendaId, invalidFinalDateTime);
-        Agenda agenda = new Agenda();
-        agenda.setStatus(AgendaStatus.created);
+        CreateVotingSessionRequest request = new CreateVotingSessionRequest();
+        request.setAgendaId(mockAgendaId);
+        request.setFinalDateTime(invalidFinalDateTime);
 
-        when(agendaRepository.findById(agendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.validateFinalDateTime(invalidFinalDateTime)).thenReturn(false);
+        Agenda agenda = Agenda.builder()
+                .status(AgendaStatus.created)
+                .build();
+
+        when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
+        when(votingSessionValidator.isValidDeadline(invalidFinalDateTime)).thenReturn(false);
 
         VotingSession result = createVotingSessionService.create(request);
 
         assertEquals(AgendaStatus.open, result.getAgenda().getStatus());
         assertEquals(VotingSession.DEFAULT_FINAL_DATE_TIME, result.getFinalDateTime());
 
-        verify(agendaRepository).findById(agendaId);
+        verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).validateFinalDateTime(invalidFinalDateTime);
+        verify(votingSessionValidator).isValidDeadline(invalidFinalDateTime);
         verify(votingSessionRepository).save(result);
     }
 

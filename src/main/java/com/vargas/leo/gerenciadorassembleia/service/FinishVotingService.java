@@ -25,17 +25,18 @@ public class FinishVotingService {
 
     public FinishVotingResponse finishVoting(FinishVotingRequest finishVotingRequest) {
         VotingSession votingSession = this.finishVotingAndCountVotes(finishVotingRequest);
-        return new FinishVotingResponse(
-                LocalDateTime.now(),
-                votingSession.getResult(),
-                votingSession.getLooserOption(),
-                votingSession.getYesVotes(),
-                votingSession.getNoVotes()
-        );
+
+        return FinishVotingResponse.builder()
+                .endedAt(LocalDateTime.now())
+                .winnerOption(votingSession.getResult())
+                .noVotes(votingSession.getNoVotes())
+                .yesVotes(votingSession.getYesVotes())
+                .build();
     }
 
     protected VotingSession finishVotingAndCountVotes(FinishVotingRequest finishVotingRequest) {
-        User user = userRepository.findById(finishVotingRequest.getUserId())
+
+        userRepository.findById(finishVotingRequest.getUserId())
                 .orElseThrow(() -> new NotFoundException("user.not.found"));
 
         VotingSession votingSession = votingSessionRepository.findById(finishVotingRequest.getVotingSessionId())
@@ -44,6 +45,7 @@ public class FinishVotingService {
         votingSessionValidator.validateVotingSessionStatus(votingSession);
 
         this.defineVotingSessionResult(votingSession);
+
         this.closeVotingSession(votingSession);
 
         votingSessionRepository.save(votingSession);
@@ -52,7 +54,8 @@ public class FinishVotingService {
     }
 
     private void closeVotingSession(VotingSession votingSession) {
-        votingSession.setStatus(VotingSessionStatus.closed);
+        votingSession.setStatus(VotingSessionStatus.close);
+
         this.closeAgenda(votingSession.getAgenda());
     }
 
@@ -63,13 +66,10 @@ public class FinishVotingService {
     private void defineVotingSessionResult(VotingSession votingSession) {
         if (votingSession.getYesVotes() > votingSession.getNoVotes()) {
             votingSession.setResult(VotingResult.yes);
-            votingSession.setLooserOption(VotingResult.no);
         } else if (votingSession.getNoVotes() > votingSession.getYesVotes()) {
             votingSession.setResult(VotingResult.no);
-            votingSession.setLooserOption(VotingResult.yes);
         } else {
             votingSession.setResult(VotingResult.draw);
-            votingSession.setLooserOption(VotingResult.draw);
         }
     }
 
