@@ -3,8 +3,10 @@ package com.vargas.leo.gerenciadorassembleia.service;
 import com.vargas.leo.gerenciadorassembleia.controller.request.VoteRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.VoteResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.*;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingPower;
+import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingSessionStatus;
 import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
@@ -49,12 +51,19 @@ public class RegisterVoteService {
             throw new BusinessException("user.already.voted.in.this.session");
         }
 
-        VotingOption votingOption = this.validateVote(voteRequest.getVote());
-
         votingSessionValidator.validateVotingSessionStatus(vote.getVotingSession());
 
+        if (votingSessionValidator.isNotValidDeadline(votingSession.getDeadline())) {
+            votingSession.setStatus(VotingSessionStatus.close);
+            votingSession.getAgenda().setStatus(AgendaStatus.closed);
+            votingSessionRepository.save(votingSession);
+            throw new BusinessException("voting.session.reached.deadline");
+        }
+
+        VotingOption votingOption = this.validateVote(voteRequest.getVote());
+
         if (!this.isUserAbleToVote(user.getCpf())) {
-           throw new BusinessException("cpf.is.unable.to.vote");
+            throw new BusinessException("cpf.is.unable.to.vote");
         }
 
         this.registerVote(vote, votingOption);

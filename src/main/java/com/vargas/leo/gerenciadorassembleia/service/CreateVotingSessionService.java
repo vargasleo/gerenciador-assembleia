@@ -30,7 +30,7 @@ public class CreateVotingSessionService {
         return CreateVotingSessionResponse.builder()
                 .id(votingSession.getId())
                 .createdAt(votingSession.getCreatedAt())
-                .finalDateTime(votingSession.getFinalDateTime())
+                .finalDateTime(votingSession.getDeadline())
                 .build();
     }
 
@@ -63,13 +63,13 @@ public class CreateVotingSessionService {
         }
     }
 
-    private void adjustVotingSessionTimeLimit(VotingSession votingSession, LocalDateTime finalTimeLimit) {
-        boolean validRequestTimeLimit = votingSessionValidator.isValidDeadline(finalTimeLimit);
+    private void adjustVotingSessionTimeLimit(VotingSession votingSession, LocalDateTime deadline) {
+        boolean validRequestTimeLimit = votingSessionValidator.isValidRequestDeadline(deadline);
 
         if (validRequestTimeLimit) {
-            votingSession.setFinalDateTime(finalTimeLimit);
+            votingSession.setDeadline(deadline);
         } else {
-            votingSession.setFinalDateTime(VotingSession.DEFAULT_FINAL_DATE_TIME);
+            votingSession.setDeadline(VotingSession.DEFAULT_FINAL_DATE_TIME);
         }
     }
 
