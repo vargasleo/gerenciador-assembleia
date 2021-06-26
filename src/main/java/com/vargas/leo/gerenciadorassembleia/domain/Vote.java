@@ -1,17 +1,21 @@
 package com.vargas.leo.gerenciadorassembleia.domain;
 
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Builder
+@Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "vote")
-@Getter
-@Setter
 public class Vote {
 
     @Id
@@ -36,13 +40,3 @@ public class Vote {
     private VotingOption vote;
 
 }
-/**
- * @ManyToOne()
- * @JoinColumn(name="role_id", referencedColumnName = "role_id", insertable = false, updatable = false)
- * private UserRole userRole;
- * and same do for userRole
- *
- * @OneToMany(targetEntity=User.class, mappedBy="userRole",cascade=CascadeType.ALL, fetch = FetchType.LAZY)
- * private List<User> user = new ArrayList<>();
- *
- */

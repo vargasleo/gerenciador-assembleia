@@ -26,7 +26,10 @@ public class RegisterVoteService {
 
     public VoteResponse registerVote(VoteRequest voteRequest) {
         Vote vote = this.register(voteRequest);
-        return new VoteResponse(vote.getVote(), vote.getVotedAt());
+        return VoteResponse.builder()
+                .votingOption(vote.getVote())
+                .votedAt(vote.getVotedAt())
+                .build();
     }
 
     protected Vote register(VoteRequest voteRequest) {
@@ -54,10 +57,10 @@ public class RegisterVoteService {
     }
 
     private Vote createNewVote(User user, VotingSession votingSession) {
-        Vote vote = new Vote();
-        vote.setUser(user);
-        vote.setVotingSession(votingSession);
-        return vote;
+        return Vote.builder()
+                .user(user)
+                .votingSession(votingSession)
+                .build();
     }
 
     private void registerVote(Vote vote, VotingOption votingOption) {

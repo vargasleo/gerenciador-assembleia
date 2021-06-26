@@ -10,6 +10,7 @@ import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,16 +40,21 @@ public class FinishVotingServiceTest {
 
     private final Integer mockUserId = 1;
     private final Integer mockVotingSessionId = 1;
+    private FinishVotingRequest request;
+
+    @Before
+    public void setUp() {
+        request = new FinishVotingRequest();
+    }
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenUserNotFound() {
-        FinishVotingRequest finishVotingRequest = new FinishVotingRequest();
-        finishVotingRequest.setUserId(mockUserId);
+        request.setUserId(mockUserId);
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.empty());
 
         try {
-            finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
+            finishVotingService.finishVotingAndCountVotes(request);
         } catch (NotFoundException e) {
             assertEquals("user.not.found", e.getMessage());
 
@@ -61,15 +67,16 @@ public class FinishVotingServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void shouldThrowExceptionWhenVotingSessionNotFound() {
-        FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
+        request.setUserId(mockUserId);
+        request.setVotingSessionId(mockVotingSessionId);
 
-        User user = new User();
+        User user = User.builder().build();
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.empty());
 
         try {
-            finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
+            finishVotingService.finishVotingAndCountVotes(request);
         } catch (NotFoundException e) {
             assertEquals("voting.session.not.found", e.getMessage());
 
@@ -83,19 +90,23 @@ public class FinishVotingServiceTest {
 
     @Test(expected = BusinessException.class)
     public void shouldThrowExceptionWhenVotingSessionStatusIsInvalid() {
-        FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
+        request.setUserId(mockUserId);
+        request.setVotingSessionId(mockVotingSessionId);
 
-        User user = new User();
-        Agenda agenda = new Agenda();
+        User user = User.builder().build();
 
-        VotingSession votingSession = new VotingSession();
-        votingSession.setAgenda(agenda);
+        Agenda agenda = Agenda.builder().build();
+
+        VotingSession votingSession = VotingSession.builder()
+                .agenda(agenda)
+                .build();
+
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
         doThrow(BusinessException.class).when(votingSessionValidator).validateVotingSessionStatus(votingSession);
 
         try {
-            finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
+            finishVotingService.finishVotingAndCountVotes(request);
         } catch (BusinessException e) {
 
             verify(userRepository).findById(mockUserId);
@@ -109,24 +120,26 @@ public class FinishVotingServiceTest {
 
     @Test
     public void shouldDefineYesAsWinner() {
-        FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
+        request.setUserId(mockUserId);
+        request.setVotingSessionId(mockVotingSessionId);
 
-        User user = new User();
-        Agenda agenda = new Agenda();
+        User user = User.builder().build();
 
-        VotingSession votingSession = new VotingSession();
-        votingSession.setAgenda(agenda);
-        votingSession.setYesVotes(1);
+        Agenda agenda = Agenda.builder().build();
+
+        VotingSession votingSession = VotingSession.builder()
+                .agenda(agenda)
+                .yesVotes(1)
+                .build();
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
 
-        VotingSession result = finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
+        VotingSession result = finishVotingService.finishVotingAndCountVotes(request);
 
         assertEquals(AgendaStatus.closed, result.getAgenda().getStatus());
-        assertEquals(VotingSessionStatus.closed, result.getStatus());
+        assertEquals(VotingSessionStatus.close, result.getStatus());
         assertEquals(VotingResult.yes, result.getResult());
-        assertEquals(VotingResult.no, result.getLooserOption());
 
         verify(userRepository).findById(mockUserId);
         verify(votingSessionRepository).findById(mockVotingSessionId);
@@ -137,24 +150,26 @@ public class FinishVotingServiceTest {
 
     @Test
     public void shouldDefineNoAsWinner() {
-        FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
+        request.setUserId(mockUserId);
+        request.setVotingSessionId(mockVotingSessionId);
 
-        User user = new User();
-        Agenda agenda = new Agenda();
+        User user = User.builder().build();
 
-        VotingSession votingSession = new VotingSession();
-        votingSession.setAgenda(agenda);
-        votingSession.setNoVotes(1);
+        Agenda agenda = Agenda.builder().build();
+
+        VotingSession votingSession = VotingSession.builder()
+                .agenda(agenda)
+                .noVotes(1)
+                .build();
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
 
-        VotingSession result = finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
+        VotingSession result = finishVotingService.finishVotingAndCountVotes(request);
 
         assertEquals(AgendaStatus.closed, result.getAgenda().getStatus());
-        assertEquals(VotingSessionStatus.closed, result.getStatus());
+        assertEquals(VotingSessionStatus.close, result.getStatus());
         assertEquals(VotingResult.no, result.getResult());
-        assertEquals(VotingResult.yes, result.getLooserOption());
 
         verify(userRepository).findById(mockUserId);
         verify(votingSessionRepository).findById(mockVotingSessionId);
@@ -165,23 +180,25 @@ public class FinishVotingServiceTest {
 
     @Test
     public void shouldDefineResultAsDraw() {
-        FinishVotingRequest finishVotingRequest = new FinishVotingRequest(mockUserId, mockVotingSessionId);
+        request.setUserId(mockUserId);
+        request.setVotingSessionId(mockVotingSessionId);
 
-        User user = new User();
-        Agenda agenda = new Agenda();
+        User user = User.builder().build();
 
-        VotingSession votingSession = new VotingSession();
-        votingSession.setAgenda(agenda);
+        Agenda agenda = Agenda.builder().build();
+
+        VotingSession votingSession = VotingSession.builder()
+                .agenda(agenda)
+                .build();
 
         when(userRepository.findById(mockUserId)).thenReturn(Optional.of(user));
         when(votingSessionRepository.findById(mockVotingSessionId)).thenReturn(Optional.of(votingSession));
 
-        VotingSession result = finishVotingService.finishVotingAndCountVotes(finishVotingRequest);
+        VotingSession result = finishVotingService.finishVotingAndCountVotes(request);
 
         assertEquals(AgendaStatus.closed, result.getAgenda().getStatus());
-        assertEquals(VotingSessionStatus.closed, result.getStatus());
+        assertEquals(VotingSessionStatus.close, result.getStatus());
         assertEquals(VotingResult.draw, result.getResult());
-        assertEquals(VotingResult.draw, result.getLooserOption());
 
         verify(userRepository).findById(mockUserId);
         verify(votingSessionRepository).findById(mockVotingSessionId);

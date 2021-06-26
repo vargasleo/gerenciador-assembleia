@@ -10,27 +10,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ControllerErrorInterceptor {
-/*
-    @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(Exception exception) {
-        ErrorResponse response = new ErrorResponse();
-        String INTERNAL_ERROR = "server.internal.error";
-        response.setMessage(INTERNAL_ERROR);
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-    }*/
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(NotFoundException exception) {
-        ErrorResponse response = new ErrorResponse();
-        response.setMessage(exception.getMessage());
+        ErrorResponse response = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(BusinessException exception) {
-        ErrorResponse response = new ErrorResponse();
-        response.setMessage(exception.getMessage());
+        ErrorResponse response = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

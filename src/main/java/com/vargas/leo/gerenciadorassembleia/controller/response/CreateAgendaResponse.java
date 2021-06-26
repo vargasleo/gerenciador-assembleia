@@ -3,10 +3,8 @@ package com.vargas.leo.gerenciadorassembleia.controller.response;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
 import lombok.*;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
+@Builder
 public class CreateAgendaResponse {
 
     private String subject;

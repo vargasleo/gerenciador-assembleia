@@ -5,10 +5,12 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
+@Builder
+@Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
-@Getter
-@Setter
 public class User {
 
     @Id

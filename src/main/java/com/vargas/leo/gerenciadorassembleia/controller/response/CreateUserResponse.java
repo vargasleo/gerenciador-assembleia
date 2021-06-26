@@ -1,12 +1,9 @@
 package com.vargas.leo.gerenciadorassembleia.controller.response;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
+@Builder
 public class CreateUserResponse {
 
     private final Integer id;

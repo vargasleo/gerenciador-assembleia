@@ -8,7 +8,6 @@ import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.AgendaValidator;
 import com.vargas.leo.gerenciadorassembleia.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,19 +17,29 @@ public class CreateAgendaService {
     private final AgendaRepository agendaRepository;
     private final UserValidator userValidator;
     private final AgendaValidator agendaValidator;
-    private final ModelMapper mapper;
 
     public CreateAgendaResponse createAgenda(CreateAgendaRequest createAgendaRequest) {
-        return mapper.map(this.create(createAgendaRequest), CreateAgendaResponse.class);
+        Agenda agenda = this.create(createAgendaRequest);
+
+        return CreateAgendaResponse.builder()
+                .id(agenda.getId())
+                .status(agenda.getStatus())
+                .subject(agenda.getSubject())
+                .build();
     }
 
     protected Agenda create(CreateAgendaRequest createAgendaRequest) {
         agendaValidator.validateAgendaSubject(createAgendaRequest.getSubject());
+
         userValidator.validateUserId(createAgendaRequest.getUserId());
-        Agenda agenda = new Agenda();
-        agenda.setSubject(createAgendaRequest.getSubject());
-        agenda.setStatus(AgendaStatus.created);
+
+        Agenda agenda = Agenda.builder()
+                .subject(createAgendaRequest.getSubject())
+                .status(AgendaStatus.created)
+                .build();
+
         agendaRepository.save(agenda);
+
         return agenda;
     }
 

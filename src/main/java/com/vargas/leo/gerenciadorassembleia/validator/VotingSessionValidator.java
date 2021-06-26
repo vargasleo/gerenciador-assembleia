@@ -11,18 +11,18 @@ import java.util.Objects;
 @Component
 public class VotingSessionValidator {
 
-    public boolean validateFinalDateTime(LocalDateTime finalDateTime) {
-        if (finalDateTime != null) {
-            return LocalDateTime.now().isBefore(finalDateTime);
+    public boolean isValidDeadline(LocalDateTime deadline) {
+        if (deadline != null) {
+            return LocalDateTime.now().isBefore(deadline);
         }
         return false;
     }
 
     public void validateVotingSessionStatus(VotingSession votingSession) {
         if (Objects.isNull(votingSession.getStatus())) {
-            throw new BusinessException("no.valid.voting.session.status");
+            throw new BusinessException("null.voting.session.status");
         }
-        if (VotingSessionStatus.closed.equals(votingSession.getStatus())) {
+        if (VotingSessionStatus.close.equals(votingSession.getStatus())) {
             throw new BusinessException("voting.session.already.closed");
         }
     }

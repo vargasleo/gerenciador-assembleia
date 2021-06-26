@@ -1,20 +1,16 @@
 package com.vargas.leo.gerenciadorassembleia.controller.response;
 
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingResult;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@RequiredArgsConstructor
+@Data
+@Builder
 public class FinishVotingResponse {
 
     private final LocalDateTime endedAt;
     private final VotingResult winnerOption;
-    private final VotingResult looserOption;
     private final int yesVotes;
     private final int noVotes;
 
