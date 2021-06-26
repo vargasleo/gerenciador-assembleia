@@ -30,7 +30,7 @@ public class CreateVotingSessionService {
         return CreateVotingSessionResponse.builder()
                 .id(votingSession.getId())
                 .createdAt(votingSession.getCreatedAt())
-                .finalDateTime(votingSession.getDeadline())
+                .deadline(votingSession.getDeadline())
                 .build();
     }
 

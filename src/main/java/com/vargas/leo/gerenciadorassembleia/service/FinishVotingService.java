@@ -30,7 +30,7 @@ public class FinishVotingService {
 
         FinishVotingResponse response = FinishVotingResponse.builder()
                 .endedAt(LocalDateTime.now())
-                .winnerOption(votingSession.getResult())
+                .result(votingSession.getResult())
                 .noVotes(votingSession.getNoVotes())
                 .yesVotes(votingSession.getYesVotes())
                 .id(votingSession.getId())

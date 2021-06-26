@@ -14,7 +14,7 @@ public class ListenerService {
     public void listenMessage(FinishVotingResponse finishVotingResponse) {
         log.info("voting session " + finishVotingResponse.getId() + " has ended");
         log.info("subject is " + finishVotingResponse.getAgendaSubject());
-        log.info("result is " + finishVotingResponse.getWinnerOption());
+        log.info("result is " + finishVotingResponse.getResult());
         throw new AmqpRejectAndDontRequeueException("simulating failure to requeue to dlq");
     }
 

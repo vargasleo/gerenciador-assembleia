@@ -14,7 +14,7 @@ public class FinishVotingResponse {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime endedAt;
-    private VotingResult winnerOption;
+    private VotingResult result;
     private int yesVotes;
     private int noVotes;
     private Integer id;
