@@ -16,8 +16,7 @@ public class UserValidatorTest {
 
     @Test
     public void shouldDoNothingWhenValidUserId() {
-        Integer userId = 1;
-        userValidator.validateUserId(userId);
+        userValidator.validateUserId(1);
     }
 
     @Test(expected = BusinessException.class)
@@ -25,9 +24,68 @@ public class UserValidatorTest {
         try {
             userValidator.validateUserId(null);
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER, e.getMessage());
+            assertEquals(userValidator.INVALID_USER_ID, e.getMessage());
             throw e;
         }
+    }
+
+    @Test(expected = BusinessException.class)
+    public void shouldThrowExceptionWhenUserNameIsNull() {
+        try {
+            userValidator.validateUserName(null);
+        } catch (BusinessException e) {
+            assertEquals(userValidator.INVALID_USER_NAME, e.getMessage());
+            throw e;
+        }
+    }
+
+    @Test(expected = BusinessException.class)
+    public void shouldThrowExceptionWhenUserNameIsEmpty() {
+        try {
+            userValidator.validateUserName("");
+        } catch (BusinessException e) {
+            assertEquals(userValidator.INVALID_USER_NAME, e.getMessage());
+            throw e;
+        }
+    }
+
+    public void shouldDoNothingWhenValidUserName() {
+        userValidator.validateUserName("validUserName");
+    }
+
+    @Test(expected = BusinessException.class)
+    public void shouldThrowExceptionWhenNullUserCpf() {
+        try {
+            userValidator.validateCpf(null);
+        } catch (BusinessException e) {
+            assertEquals(userValidator.INVALID_USER_CPF, e.getMessage());
+            throw e;
+        }
+    }
+
+    @Test(expected = BusinessException.class)
+    public void shouldThrowExceptionWhenEmptyUserCpf() {
+        try {
+            userValidator.validateCpf("");
+        } catch (BusinessException e) {
+            assertEquals(userValidator.INVALID_USER_CPF, e.getMessage());
+            throw e;
+        }
+    }
+
+    @Test(expected = BusinessException.class)
+    public void shouldThrowExceptionWhenEmptyInvalidCpf() {
+        try {
+            userValidator.validateCpf("123");
+        } catch (BusinessException e) {
+            assertEquals(userValidator.INVALID_USER_CPF, e.getMessage());
+            throw e;
+        }
+    }
+
+    @Test
+    public void shouldDoNothingWhenValidCpf() {
+        userValidator.validateCpf("04430454027");
     }
 
 }

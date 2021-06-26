@@ -61,13 +61,13 @@ public class CreateAgendaServiceTest {
         request.setUserId(userId);
         request.setSubject(mockSubject);
 
-        doThrow(new BusinessException(userValidator.INVALID_USER))
+        doThrow(new BusinessException(userValidator.INVALID_USER_ID))
                 .when(userValidator).validateUserId(userId);
 
         try {
             createAgendaService.create(request);
         } catch (BusinessException e) {
-            assertEquals(userValidator.INVALID_USER, e.getMessage());
+            assertEquals(userValidator.INVALID_USER_ID, e.getMessage());
 
             verify(agendaValidator).validateAgendaSubject(mockSubject);
             verify(userValidator).validateUserId(userId);
