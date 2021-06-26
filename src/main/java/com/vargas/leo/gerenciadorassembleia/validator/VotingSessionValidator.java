@@ -11,13 +11,6 @@ import java.util.Objects;
 @Component
 public class VotingSessionValidator {
 
-    public boolean isValidDeadline(LocalDateTime deadline) {
-        if (deadline != null) {
-            return LocalDateTime.now().isBefore(deadline);
-        }
-        return false;
-    }
-
     public void validateVotingSessionStatus(VotingSession votingSession) {
         if (Objects.isNull(votingSession.getStatus())) {
             throw new BusinessException("null.voting.session.status");
@@ -27,4 +20,11 @@ public class VotingSessionValidator {
         }
     }
 
+    public boolean isNotValidDeadline(LocalDateTime deadline) {
+        return LocalDateTime.now().isBefore(deadline);
+    }
+
+    public boolean isValidRequestDeadline(LocalDateTime deadline) {
+        return LocalDateTime.now().isBefore(deadline);
+    }
 }

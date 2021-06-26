@@ -89,16 +89,16 @@ public class CreatingVotingSessionServiceTest {
                 .build();
 
         when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.isValidDeadline(validTimeLimit)).thenReturn(true);
+        when(votingSessionValidator.isNotValidDeadline(validTimeLimit)).thenReturn(true);
 
         VotingSession result = createVotingSessionService.create(request);
 
         assertEquals(AgendaStatus.open, result.getAgenda().getStatus());
-        assertEquals(validTimeLimit, result.getFinalDateTime());
+        assertEquals(validTimeLimit, result.getDeadline());
 
         verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).isValidDeadline(validTimeLimit);
+        verify(votingSessionValidator).isNotValidDeadline(validTimeLimit);
         verify(votingSessionRepository).save(result);
     }
 
@@ -112,16 +112,16 @@ public class CreatingVotingSessionServiceTest {
                 .build();
 
         when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.isValidDeadline(null)).thenReturn(false);
+        when(votingSessionValidator.isNotValidDeadline(null)).thenReturn(false);
 
         VotingSession result = createVotingSessionService.create(request);
 
         assertEquals(AgendaStatus.open, result.getAgenda().getStatus());
-        assertEquals(VotingSession.DEFAULT_FINAL_DATE_TIME, result.getFinalDateTime());
+        assertEquals(VotingSession.DEFAULT_FINAL_DATE_TIME, result.getDeadline());
 
         verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).isValidDeadline(null);
+        verify(votingSessionValidator).isNotValidDeadline(null);
         verify(votingSessionRepository).save(result);
     }
 
@@ -138,16 +138,16 @@ public class CreatingVotingSessionServiceTest {
                 .build();
 
         when(agendaRepository.findById(mockAgendaId)).thenReturn(Optional.of(agenda));
-        when(votingSessionValidator.isValidDeadline(invalidFinalDateTime)).thenReturn(false);
+        when(votingSessionValidator.isNotValidDeadline(invalidFinalDateTime)).thenReturn(false);
 
         VotingSession result = createVotingSessionService.create(request);
 
         assertEquals(AgendaStatus.open, result.getAgenda().getStatus());
-        assertEquals(VotingSession.DEFAULT_FINAL_DATE_TIME, result.getFinalDateTime());
+        assertEquals(VotingSession.DEFAULT_FINAL_DATE_TIME, result.getDeadline());
 
         verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
-        verify(votingSessionValidator).isValidDeadline(invalidFinalDateTime);
+        verify(votingSessionValidator).isNotValidDeadline(invalidFinalDateTime);
         verify(votingSessionRepository).save(result);
     }
 

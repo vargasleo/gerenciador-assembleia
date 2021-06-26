@@ -21,7 +21,7 @@ import java.time.LocalTime;
 @Table(name = "voting_session")
 public class VotingSession {
 
-    public static final LocalDateTime DEFAULT_FINAL_DATE_TIME = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 3, 0));
+    public static final LocalDateTime DEFAULT_FINAL_DATE_TIME = LocalDate.now().atTime(LocalTime.now()).plusMinutes(3);
 
     @Id
     @GeneratedValue(generator = "increment")
@@ -40,7 +40,7 @@ public class VotingSession {
     private LocalDateTime endedAt;
 
     @Column(name = "deadline")
-    private LocalDateTime finalDateTime;
+    private LocalDateTime deadline;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "result")

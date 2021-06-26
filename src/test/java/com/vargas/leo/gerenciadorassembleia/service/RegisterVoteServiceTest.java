@@ -322,7 +322,6 @@ public class RegisterVoteServiceTest {
         request.setVotingSessionId(mockVotingSessionId);
         request.setVote(mockVotingOptionNo);
 
-
         User user = User.builder().build();
 
         VotingSession votingSession = VotingSession.builder()
@@ -361,7 +360,6 @@ public class RegisterVoteServiceTest {
         request.setVotingSessionId(mockVotingSessionId);
         request.setVote(mockVotingOptionNo);
 
-
         User user = User.builder().build();
 
         VotingSession votingSession = VotingSession.builder()
@@ -394,7 +392,48 @@ public class RegisterVoteServiceTest {
             throw e;
         }
 
+    }
 
+    @Test
+    public void shouldThrowExceptionWhenReachedDeadline() {
+        request.setUserId(mockUserId);
+        request.setVotingSessionId(mockVotingSessionId);
+        request.setVote(mockVotingOptionNo);
+
+        User user = User.builder().build();
+
+        VotingSession votingSession = VotingSession.builder()
+                .status(VotingSessionStatus.open)
+                .build();
+
+        votingSession.setStatus(VotingSessionStatus.open);
+
+        VotingPowerDTO votingPowerDTO = VotingPowerDTO.builder().status(VotingPower.ABLE_TO_VOTE).build();
+
+        when(userRepository.findById(mockUserId))
+                .thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId))
+                .thenReturn(Optional.of(votingSession));
+        when(votingSessionValidator.isNotValidDeadline(votingSession.getDeadline()))
+                .thenReturn(false);
+        when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
+                .thenReturn(Optional.empty());
+        when(cpfValidationService.isAllowedToVote(any())).thenReturn(votingPowerDTO);
+
+        try {
+            registerVoteService.register(request);
+        } catch (BusinessException e) {
+            assertEquals("voting.session.reached.deadline", e.getMessage());
+
+            verify(userRepository).findById(mockUserId);
+            verify(votingSessionValidator).isNotValidDeadline(votingSession.getDeadline());
+            verify(votingSessionRepository).findById(mockVotingSessionId);
+            verify(voteRepository).findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId);
+            verify(cpfValidationService).isAllowedToVote(any());
+            verify(voteRepository).save(any(Vote.class));
+
+            throw e;
+        }
 
     }
 
