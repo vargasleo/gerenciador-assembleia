@@ -22,14 +22,14 @@ public class VotingSessionValidatorTest {
     public void shouldReturnTrueWhenFinalDateTimeIsAfterNow() {
         LocalDateTime finalDateTime = LocalDateTime.of(LocalDate.of(2022,1,1), LocalTime.of(0,0));
         boolean result = votingSessionValidator.isNotValidDeadline(finalDateTime);
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
     public void shouldReturnFalseWhenFinalDateTimeIsBeforeNow() {
         LocalDateTime finalDateTime = LocalDateTime.of(LocalDate.of(1999,1,1), LocalTime.of(0,0));
         boolean result = votingSessionValidator.isNotValidDeadline(finalDateTime);
-        assertFalse(result);
+        assertTrue(result);
     }
 
 }

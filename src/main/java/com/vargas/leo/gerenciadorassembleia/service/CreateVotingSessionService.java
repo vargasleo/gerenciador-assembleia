@@ -12,10 +12,13 @@ import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateVotingSessionService {
@@ -34,11 +37,17 @@ public class CreateVotingSessionService {
                 .build();
     }
 
+    @Transactional
     protected VotingSession create(CreateVotingSessionRequest votingSessionRequest) {
         Agenda agenda = agendaRepository.findById(votingSessionRequest.getAgendaId())
                 .orElseThrow(() -> new NotFoundException("agenda.not.found"));
 
-        this.validateAgendaStatus(agenda);
+        try {
+            this.validateAgendaStatus(agenda);
+        } catch (BusinessException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
 
         agendaRepository.save(agenda);
 
@@ -69,7 +78,9 @@ public class CreateVotingSessionService {
         if (validRequestTimeLimit) {
             votingSession.setDeadline(deadline);
         } else {
-            votingSession.setDeadline(VotingSession.DEFAULT_FINAL_DATE_TIME);
+            votingSession.setDeadline(votingSession.DEFAULT_FINAL_DATE_TIME);
+            log.info("invalid.voting.session.deadline");
+            log.info("using.default.deadline");
         }
     }
 

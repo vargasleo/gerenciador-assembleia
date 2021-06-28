@@ -8,16 +8,14 @@ import javax.validation.constraints.NotNull;
 @Data
 public class VoteRequest {
 
-    @NotNull(message = "must.not.be.null")
-    @NotEmpty(message = "must.not.be.empty")
+    @NotNull(message = "user.id.must.not.be.null")
     private Integer userId;
 
-    @NotNull(message = "must.not.be.null")
-    @NotEmpty(message = "must.not.be.empty")
+    @NotNull(message = "voting.session.id.must.not.be.null")
     private Integer votingSessionId;
 
-    @NotNull(message = "must.not.be.null")
-    @NotEmpty(message = "must.not.be.empty")
+    @NotNull(message = "voting.option.must.not.be.null")
+    @NotEmpty(message = "voting.option.must.not.be.empty")
     private String vote;
 
 }

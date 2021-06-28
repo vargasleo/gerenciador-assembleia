@@ -11,6 +11,7 @@ import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VoteRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
+import com.vargas.leo.gerenciadorassembleia.validator.UserValidator;
 import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +45,9 @@ public class RegisterVoteServiceTest {
 
     @Mock
     private CpfValidationService cpfValidationService;
+
+    @Mock
+    private UserValidator userValidator;
 
     private final Integer mockUserId = 1;
     private final Integer mockVotingSessionId = 1;
@@ -309,6 +313,7 @@ public class RegisterVoteServiceTest {
 
         verify(userRepository).findById(mockUserId);
         verify(votingSessionRepository).findById(mockVotingSessionId);
+        verify(userValidator).validateCpf(user.getCpf());
         verify(voteRepository).findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId);
         verify(cpfValidationService).isAllowedToVote(any());
         verify(voteRepository).save(any(Vote.class));
@@ -347,9 +352,47 @@ public class RegisterVoteServiceTest {
 
         verify(userRepository).findById(mockUserId);
         verify(votingSessionRepository).findById(mockVotingSessionId);
+        verify(userValidator).validateCpf(user.getCpf());
         verify(voteRepository).findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId);
         verify(cpfValidationService).isAllowedToVote(any());
         verify(voteRepository).save(any(Vote.class));
+    }
+
+    @Test(expected = BusinessException.class)
+    public void shouldThrowExceptionWhenAllValidButUserCpfIsNull() {
+        request.setUserId(mockUserId);
+        request.setVotingSessionId(mockVotingSessionId);
+        request.setVote(mockVotingOptionNo);
+
+        User user = User.builder().build();
+
+        VotingSession votingSession = VotingSession.builder()
+                .status(VotingSessionStatus.open)
+                .build();
+
+        votingSession.setStatus(VotingSessionStatus.open);
+
+        when(userRepository.findById(mockUserId))
+                .thenReturn(Optional.of(user));
+        when(votingSessionRepository.findById(mockVotingSessionId))
+                .thenReturn(Optional.of(votingSession));
+        when(voteRepository.findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId))
+                .thenReturn(Optional.empty());
+        doCallRealMethod().when(userValidator).validateCpf(user.getCpf());
+
+        try {
+            registerVoteService.register(request);
+        } catch (BusinessException e) {
+            assertEquals("invalid.user.cpf", e.getMessage());
+
+            verify(userRepository).findById(mockUserId);
+            verify(votingSessionRepository).findById(mockVotingSessionId);
+            verify(voteRepository).findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId);
+            verify(voteRepository, never()).save(any(Vote.class));
+
+            throw e;
+        }
+
     }
 
     @Test(expected = BusinessException.class)
@@ -383,6 +426,7 @@ public class RegisterVoteServiceTest {
 
             verify(userRepository).findById(mockUserId);
             verify(votingSessionRepository).findById(mockVotingSessionId);
+            verify(userValidator).validateCpf(user.getCpf());
             verify(voteRepository).findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId);
             verify(cpfValidationService).isAllowedToVote(any());
             verify(voteRepository, never()).save(any(Vote.class));
@@ -428,6 +472,7 @@ public class RegisterVoteServiceTest {
             verify(userRepository).findById(mockUserId);
             verify(votingSessionValidator).isNotValidDeadline(votingSession.getDeadline());
             verify(votingSessionRepository).findById(mockVotingSessionId);
+            verify(userValidator).validateCpf(user.getCpf());
             verify(voteRepository).findByUserIdAndVotingSessionId(mockUserId, mockVotingSessionId);
             verify(cpfValidationService).isAllowedToVote(any());
             verify(voteRepository).save(any(Vote.class));

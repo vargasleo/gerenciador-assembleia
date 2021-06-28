@@ -4,13 +4,17 @@ import com.vargas.leo.gerenciadorassembleia.controller.request.CreateAgendaReque
 import com.vargas.leo.gerenciadorassembleia.controller.response.CreateAgendaResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.Agenda;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.AgendaStatus;
+import com.vargas.leo.gerenciadorassembleia.exception.BusinessException;
 import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.AgendaRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.validator.AgendaValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CreateAgendaService {
@@ -29,8 +33,14 @@ public class CreateAgendaService {
                 .build();
     }
 
+    @Transactional
     protected Agenda create(CreateAgendaRequest createAgendaRequest) {
-        agendaValidator.validateAgendaSubject(createAgendaRequest.getSubject());
+        try {
+            agendaValidator.validateAgendaSubject(createAgendaRequest.getSubject());
+        } catch (BusinessException e) {
+            log.error(e.getMessage());
+            throw e;
+        }
 
         userRepository.findById(createAgendaRequest.getUserId())
                 .orElseThrow(() -> new NotFoundException("user.not.found"));

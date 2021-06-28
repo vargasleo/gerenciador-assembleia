@@ -117,7 +117,7 @@ public class CreatingVotingSessionServiceTest {
         VotingSession result = createVotingSessionService.create(request);
 
         assertEquals(AgendaStatus.open, result.getAgenda().getStatus());
-        assertEquals(VotingSession.DEFAULT_FINAL_DATE_TIME, result.getDeadline());
+        assertEquals(result.DEFAULT_FINAL_DATE_TIME, result.getDeadline());
 
         verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
@@ -143,7 +143,7 @@ public class CreatingVotingSessionServiceTest {
         VotingSession result = createVotingSessionService.create(request);
 
         assertEquals(AgendaStatus.open, result.getAgenda().getStatus());
-        assertEquals(VotingSession.DEFAULT_FINAL_DATE_TIME, result.getDeadline());
+        assertEquals(result.DEFAULT_FINAL_DATE_TIME, result.getDeadline());
 
         verify(agendaRepository).findById(mockAgendaId);
         verify(agendaRepository).save(agenda);
