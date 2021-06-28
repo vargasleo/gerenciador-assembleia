@@ -5,6 +5,7 @@ import com.vargas.leo.gerenciadorassembleia.controller.request.VoteRequest;
 import com.vargas.leo.gerenciadorassembleia.controller.response.VoteResponse;
 import com.vargas.leo.gerenciadorassembleia.domain.User;
 import com.vargas.leo.gerenciadorassembleia.domain.Vote;
+import com.vargas.leo.gerenciadorassembleia.domain.VotingPowerDTO;
 import com.vargas.leo.gerenciadorassembleia.domain.VotingSession;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingOption;
 import com.vargas.leo.gerenciadorassembleia.domain.enums.VotingPower;
@@ -13,12 +14,15 @@ import com.vargas.leo.gerenciadorassembleia.exception.NotFoundException;
 import com.vargas.leo.gerenciadorassembleia.repository.UserRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VoteRepository;
 import com.vargas.leo.gerenciadorassembleia.repository.VotingSessionRepository;
+import com.vargas.leo.gerenciadorassembleia.validator.UserValidator;
 import com.vargas.leo.gerenciadorassembleia.validator.VotingSessionValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RegisterVoteService {
@@ -29,6 +33,7 @@ public class RegisterVoteService {
     private final VotingSessionValidator votingSessionValidator;
     private final CpfValidationService cpfValidationService;
     private final FinishVotingService finishVotingService;
+    private final UserValidator userValidator;
 
     public VoteResponse registerVote(VoteRequest voteRequest) {
         Vote vote = this.register(voteRequest);
@@ -50,6 +55,7 @@ public class RegisterVoteService {
                 .orElseGet(() -> this.createNewVote(user, votingSession));
 
         if (this.isVoteAlreadyRegistered(vote)) {
+            log.error("user.already.voted.in.this.session");
             throw new BusinessException("user.already.voted.in.this.session");
         }
 
@@ -68,7 +74,10 @@ public class RegisterVoteService {
 
         VotingOption votingOption = this.validateVote(voteRequest.getVote());
 
+        userValidator.validateCpf(user.getCpf());
+
         if (!this.isUserAbleToVote(user.getCpf())) {
+            log.error("cpf.is.unable.to.vote");
             throw new BusinessException("cpf.is.unable.to.vote");
         }
 
@@ -79,7 +88,13 @@ public class RegisterVoteService {
     }
 
     private boolean isUserAbleToVote(String cpf) {
-        return VotingPower.ABLE_TO_VOTE.equals(cpfValidationService.isAllowedToVote(cpf).getStatus());
+        try {
+            VotingPowerDTO votingPowerDTO = cpfValidationService.isAllowedToVote(cpf);
+            return VotingPower.ABLE_TO_VOTE.equals(votingPowerDTO.getStatus());
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage());
+            throw new BusinessException("fail.to.connect.to.cpf.validaton.service");
+        }
     }
 
     private Vote createNewVote(User user, VotingSession votingSession) {
@@ -92,12 +107,14 @@ public class RegisterVoteService {
     private void registerVote(Vote vote, VotingOption votingOption) {
         vote.setVote(votingOption);
         this.incrementVoteCounter(vote, votingOption);
+        log.info("registering.voting.option");
     }
 
     private VotingOption validateVote(String vote) {
         try {
             return VotingOption.valueOf(vote);
         } catch (Exception e) {
+            log.error("invalid.voting.option");
             throw new BusinessException("invalid.voting.option");
         }
     }

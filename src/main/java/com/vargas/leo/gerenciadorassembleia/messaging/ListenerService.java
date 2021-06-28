@@ -15,6 +15,7 @@ public class ListenerService {
         log.info("voting session " + finishVotingResponse.getId() + " has ended");
         log.info("subject is " + finishVotingResponse.getAgendaSubject());
         log.info("result is " + finishVotingResponse.getResult());
+
         throw new AmqpRejectAndDontRequeueException("simulating failure to requeue to dlq");
     }
 
@@ -22,4 +23,5 @@ public class ListenerService {
     public void failedFinishVoting(FinishVotingResponse finishVotingResponse) {
         log.info("message received in " + CloudAMQPConfig.DLQ_NAME);
     }
+
 }

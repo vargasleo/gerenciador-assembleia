@@ -21,10 +21,13 @@ public class VotingSessionValidator {
     }
 
     public boolean isNotValidDeadline(LocalDateTime deadline) {
-        return LocalDateTime.now().isBefore(deadline);
+        return LocalDateTime.now().isAfter(deadline);
     }
 
     public boolean isValidRequestDeadline(LocalDateTime deadline) {
-        return LocalDateTime.now().isBefore(deadline);
+        if (deadline != null) {
+            return LocalDateTime.now().isBefore(deadline);
+        }
+        return false;
     }
 }
